@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NumPy Mastery Assessment</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --surface: #111827;
+    --surface2: #1a2235;
+    --border: #1e2d45;
+    --accent: #00d4ff;
+    --accent2: #7c3aed;
+    --accent3: #10b981;
+    --danger: #ef4444;
+    --warn: #f59e0b;
+    --text: #e2e8f0;
+    --text2: #94a3b8;
+    --text3: #64748b;
+    --glow: 0 0 20px rgba(0,212,255,0.3);
+    --radius: 12px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 50% at 20% 20%, rgba(0,212,255,0.05) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 80% 80%, rgba(124,58,237,0.06) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .screen { display: none; position: relative; z-index: 1; }
+  .screen.active { display: block; }
+
+  #landing {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    text-align: center;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,212,255,0.1);
+    border: 1px solid rgba(0,212,255,0.3);
+    border-radius: 100px;
+    padding: 6px 18px;
+    font-size: 13px;
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    margin-bottom: 32px;
+    text-transform: uppercase;
+  }
+
+  .badge::before {
+    content: '';
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  .hero-title {
+    font-size: clamp(42px, 8vw, 80px);
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, #fff 0%, var(--accent) 50%, var(--accent2) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-size: 18px;
+    color: var(--text2);
+    max-width: 520px;
+    line-height: 1.6;
+    margin-bottom: 48px;
+    font-weight: 400;
+  }
+
+  .stats-row {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 48px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 32px;
+    text-align: center;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+
+  .stat-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent);
+  }
+
+  .stat-num {
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .stat-label {
+    font-size: 12px;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 4px;
+  }
+
+  .topics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    max-width: 800px;
+    margin: 0 auto 48px;
+  }
+
+  .topic-chip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--text2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .topic-chip span { color: var(--accent); font-size: 16px; }
+
+  .btn-start {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+    border: none;
+    border-radius: 100px;
+    padding: 18px 48px;
+    font-size: 18px;
+    font-weight: 700;
+    font-family: 'Outfit', sans-serif;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 30px rgba(0,212,255,0.3);
+    letter-spacing: 0.02em;
+  }
+
+  .btn-start:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 8px 40px rgba(0,212,255,0.5);
+  }
+
+  .btn-start:active { transform: scale(0.98); }
+
+  #quiz {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px 20px 80px;
+  }
+
+  .quiz-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10,14,26,0.95);
+    backdrop-filter: blur(12px);
+    padding: 16px 0 12px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .quiz-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+
+  .quiz-title-sm {
+    font-size: 14px;
+    color: var(--accent);
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .progress-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .q-counter {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px;
+    color: var(--text2);
+  }
+
+  .q-counter strong { color: var(--text); }
+
+  .timer-box {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px;
+    color: var(--warn);
+    font-weight: 600;
+  }
+
+  .progress-bar-track {
+    height: 4px;
+    background: var(--surface2);
+    border-radius: 100px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 100px;
+    transition: width 0.4s ease;
+  }
+
+  .nav-dots-container {
+    margin-bottom: 20px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+
+  .nav-dots {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .nav-dot {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text3);
+    font-size: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nav-dot:hover { border-color: var(--accent); color: var(--accent); }
+  .nav-dot.answered { background: rgba(16,185,129,0.15); border-color: var(--accent3); color: var(--accent3); }
+  .nav-dot.current { background: rgba(0,212,255,0.2); border-color: var(--accent); color: var(--accent); font-weight: 700; }
+
+  .question-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 20px;
+    animation: slideIn 0.3s ease;
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .q-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(124,58,237,0.15);
+    border: 1px solid rgba(124,58,237,0.3);
+    border-radius: 6px;
+    padding: 3px 10px;
+    font-size: 11px;
+    color: #a78bfa;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 16px;
+  }
+
+  .q-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--text3);
+    margin-bottom: 12px;
+  }
+
+  .q-text {
+    font-size: 17px;
+    line-height: 1.65;
+    color: var(--text);
+    font-weight: 500;
+    margin-bottom: 28px;
+  }
+
+  .q-text code {
+    background: rgba(0,212,255,0.1);
+    border: 1px solid rgba(0,212,255,0.2);
+    border-radius: 5px;
+    padding: 2px 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    color: var(--accent);
+  }
+
+  .options-grid {
+    display: grid;
+    gap: 10px;
+  }
+
+  .option-btn {
+    width: 100%;
+    background: var(--surface2);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 18px;
+    text-align: left;
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    line-height: 1.5;
+  }
+
+  .option-btn:hover {
+    border-color: var(--accent);
+    background: rgba(0,212,255,0.06);
+    transform: translateX(4px);
+  }
+
+  .option-btn.selected {
+    border-color: var(--accent);
+    background: rgba(0,212,255,0.12);
+    color: #fff;
+  }
+
+  .option-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px; height: 28px;
+    border-radius: 6px;
+    background: var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text3);
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+
+  .option-btn.selected .option-label {
+    background: var(--accent);
+    color: #000;
+  }
+
+  .option-btn:hover .option-label {
+    background: rgba(0,212,255,0.3);
+    color: var(--accent);
+  }
+
+  .quiz-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+
+  .btn-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 12px 24px;
+    color: var(--text2);
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .btn-nav:hover:not(:disabled) {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .btn-nav:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .btn-submit {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #10b981, #059669);
+    border: none;
+    border-radius: 100px;
+    padding: 14px 32px;
+    color: #fff;
+    font-family: 'Outfit', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 20px rgba(16,185,129,0.3);
+  }
+
+  .btn-submit:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 30px rgba(16,185,129,0.5);
+  }
+
+  .unanswered-warning {
+    background: rgba(245,158,11,0.1);
+    border: 1px solid rgba(245,158,11,0.3);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 13px;
+    color: var(--warn);
+    display: none;
+    margin-top: 12px;
+  }
+
+  /* ── RESULT SCREEN ── */
+  #result {
+    min-height: 100vh;
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .result-wrapper {
+    max-width: 700px;
+    width: 100%;
+  }
+
+  .result-hero {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .score-ring {
+    position: relative;
+    width: 180px; height: 180px;
+    margin: 0 auto 24px;
+  }
+
+  .score-ring svg {
+    transform: rotate(-90deg);
+    width: 100%; height: 100%;
+  }
+
+  .ring-bg { fill: none; stroke: var(--surface2); stroke-width: 10; }
+  .ring-fill {
+    fill: none;
+    stroke-width: 10;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 1.5s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .score-center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .score-pct {
+    font-size: 38px;
+    font-weight: 800;
+    font-family: 'JetBrains Mono', monospace;
+    line-height: 1;
+  }
+
+  .score-label {
+    font-size: 12px;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 4px;
+  }
+
+  .result-grade {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+
+  .result-msg {
+    font-size: 16px;
+    color: var(--text2);
+  }
+
+  .result-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .res-stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    text-align: center;
+  }
+
+  .res-stat-num {
+    font-size: 32px;
+    font-weight: 800;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .res-stat-num.correct { color: var(--accent3); }
+  .res-stat-num.wrong { color: var(--danger); }
+  .res-stat-num.skipped { color: var(--warn); }
+
+  .res-stat-label {
+    font-size: 12px;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 6px;
+  }
+
+  .breakdown-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--text);
+  }
+
+  .breakdown-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 32px;
+  }
+
+  .breakdown-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .breakdown-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .breakdown-item.correct-item { border-left: 3px solid var(--accent3); }
+  .breakdown-item.wrong-item { border-left: 3px solid var(--danger); }
+  .breakdown-item.skip-item { border-left: 3px solid var(--warn); }
+
+  .breakdown-q { color: var(--text2); }
+  .breakdown-ans { color: var(--text3); font-size: 12px; margin-top: 4px; }
+  .breakdown-ans.your { color: var(--danger); }
+
+  .result-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-retry {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none;
+    border-radius: 100px;
+    padding: 14px 32px;
+    color: #fff;
+    font-family: 'Outfit', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: var(--glow);
+  }
+
+  .btn-retry:hover { transform: translateY(-2px); box-shadow: 0 8px 40px rgba(0,212,255,0.4); }
+
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 36px;
+    max-width: 440px;
+    width: 100%;
+    text-align: center;
+    transform: scale(0.9);
+    transition: transform 0.2s;
+  }
+
+  .modal-overlay.open .modal { transform: scale(1); }
+
+  .modal-icon { font-size: 48px; margin-bottom: 16px; }
+  .modal-title { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+  .modal-text { font-size: 15px; color: var(--text2); margin-bottom: 28px; line-height: 1.5; }
+
+  .modal-btns { display: flex; gap: 12px; justify-content: center; }
+
+  .btn-confirm {
+    background: var(--accent3);
+    border: none;
+    border-radius: 100px;
+    padding: 12px 28px;
+    color: #fff;
+    font-family: 'Outfit', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .btn-confirm:hover { transform: scale(1.04); }
+
+  .btn-cancel {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 12px 28px;
+    color: var(--text2);
+    font-family: 'Outfit', sans-serif;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .btn-cancel:hover { border-color: var(--accent); color: var(--accent); }
+
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--surface); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+  @media (max-width: 600px) {
+    .question-card { padding: 20px; }
+    .result-stats { grid-template-columns: 1fr; }
+    .stats-row { gap: 12px; }
+    .stat-card { padding: 16px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="landing" class="screen active">
+  <div class="badge">🐍 Python · NumPy Module</div>
+  <h1 class="hero-title">NumPy<br>Mastery Test</h1>
+  <p class="hero-sub">A comprehensive assessment covering every major concept of the NumPy library — from arrays and broadcasting to FFT and linear algebra.</p>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-num">175+</div>
+      <div class="stat-label">Questions</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">70</div>
+      <div class="stat-label">Per Test</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">90</div>
+      <div class="stat-label">Minutes</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">12+</div>
+      <div class="stat-label">Topics</div>
+    </div>
+  </div>
+
+  <div class="topics-grid">
+    <div class="topic-chip"><span>📦</span> Array Creation</div>
+    <div class="topic-chip"><span>🔢</span> Data Types</div>
+    <div class="topic-chip"><span>✂️</span> Indexing & Slicing</div>
+    <div class="topic-chip"><span>🔄</span> Reshaping</div>
+    <div class="topic-chip"><span>📡</span> Broadcasting</div>
+    <div class="topic-chip"><span>➕</span> Math Operations</div>
+    <div class="topic-chip"><span>📊</span> Statistics</div>
+    <div class="topic-chip"><span>🔗</span> Linear Algebra</div>
+    <div class="topic-chip"><span>🎲</span> Random Module</div>
+    <div class="topic-chip"><span>🗂️</span> File I/O</div>
+    <div class="topic-chip"><span>🌊</span> FFT</div>
+    <div class="topic-chip"><span>🔍</span> Sorting & Search</div>
+  </div>
+
+  <button class="btn-start" onclick="startQuiz()">
+    🚀 Start Assessment
+  </button>
+</div>
+
+<div id="quiz" class="screen">
+  <div class="quiz-header">
+    <div class="quiz-meta">
+      <div class="quiz-title-sm">⚡ NumPy Assessment</div>
+      <div class="progress-info">
+        <div class="q-counter">Q <strong id="currentQNum">1</strong> / <strong>70</strong></div>
+        <div class="timer-box">⏱ <span id="timerDisplay">90:00</span></div>
+      </div>
+    </div>
+    <div class="progress-bar-track">
+      <div class="progress-bar-fill" id="progressBar" style="width:0%"></div>
+    </div>
+  </div>
+
+  <div class="nav-dots-container">
+    <div class="nav-dots" id="navDots"></div>
+  </div>
+
+  <div id="questionContainer"></div>
+
+  <div class="quiz-controls">
+    <button class="btn-nav" id="btnPrev" onclick="navigate(-1)">← Previous</button>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">
+      <button class="btn-nav" id="btnNext" onclick="navigate(1)">Next →</button>
+      <button class="btn-submit" onclick="openSubmitModal()">✅ Submit Test</button>
+    </div>
+  </div>
+  <div class="unanswered-warning" id="unansWarning"></div>
+</div>
+
+<div id="result" class="screen">
+  <div class="result-wrapper">
+    <div class="result-hero">
+      <div class="score-ring">
+        <svg viewBox="0 0 180 180">
+          <circle class="ring-bg" cx="90" cy="90" r="75"/>
+          <circle class="ring-fill" id="ringFill" cx="90" cy="90" r="75"
+            stroke-dasharray="471"
+            stroke-dashoffset="471"/>
+        </svg>
+        <div class="score-center">
+          <div class="score-pct" id="scorePct">0%</div>
+          <div class="score-label">Score</div>
+        </div>
+      </div>
+      <div class="result-grade" id="resultGrade"></div>
+      <div class="result-msg" id="resultMsg"></div>
+    </div>
+
+    <div class="result-stats">
+      <div class="res-stat">
+        <div class="res-stat-num correct" id="resCorrect">0</div>
+        <div class="res-stat-label">✅ Correct</div>
+      </div>
+      <div class="res-stat">
+        <div class="res-stat-num wrong" id="resWrong">0</div>
+        <div class="res-stat-label">❌ Wrong</div>
+      </div>
+      <div class="res-stat">
+        <div class="res-stat-num skipped" id="resSkipped">0</div>
+        <div class="res-stat-label">⏭ Skipped</div>
+      </div>
+    </div>
+
+    <div class="breakdown-title">📋 Question Breakdown</div>
+    <div class="breakdown-list" id="breakdownList"></div>
+
+    <div class="result-actions">
+      <button class="btn-retry" onclick="startQuiz()">🔄 Retry with New Questions</button>
+      <button class="btn-cancel" onclick="showScreen('landing')">🏠 Home</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="submitModal">
+  <div class="modal">
+    <div class="modal-icon">📝</div>
+    <div class="modal-title">Submit Assessment?</div>
+    <div class="modal-text" id="modalText">You are about to submit your test. This action cannot be undone.</div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeSubmitModal()">Cancel</button>
+      <button class="btn-confirm" onclick="submitQuiz()">Submit Now</button>
+    </div>
+  </div>
+</div>
+
+<script>
+
+// QUESTION BANK  (175 questions)
+const QUESTION_BANK = [
+  {topic:"Array Creation",q:"Which function creates a NumPy array from a Python list?",opts:["np.array()","np.create()","np.make()","np.list()"],a:0},
+  {topic:"Array Creation",q:"What does <code>np.zeros((3,4))</code> return?",opts:["3×4 matrix of zeros","3×4 matrix of ones","Array of shape (3,4) with NaN","Empty array"],a:0},
+  {topic:"Array Creation",q:"Which function creates an array of evenly spaced values in a given range?",opts:["np.linspace()","np.arange()","np.range()","np.space()"],a:0},
+  {topic:"Array Creation",q:"What is the default dtype of <code>np.zeros(5)</code>?",opts:["float64","int64","float32","int32"],a:0},
+  {topic:"Array Creation",q:"<code>np.arange(1, 10, 2)</code> produces:",opts:["[1, 3, 5, 7, 9]","[1, 2, 3, 4, 5]","[1, 4, 7, 10]","[2, 4, 6, 8]"],a:0},
+  {topic:"Array Creation",q:"Which function creates an identity matrix of size n×n?",opts:["np.eye(n)","np.identity(n)","Both A and B","np.diag(n)"],a:2},
+  {topic:"Array Creation",q:"What does <code>np.empty((2,3))</code> do?",opts:["Creates uninitialized 2×3 array","Creates 2×3 array of zeros","Creates 2×3 array with NaN","Raises an error"],a:0},
+  {topic:"Array Creation",q:"How do you create a 3D array of shape (2,3,4) filled with ones?",opts:["np.ones((2,3,4))","np.ones([2,3,4])","Both A and B","np.full((2,3,4),1)"],a:2},
+  {topic:"Array Creation",q:"<code>np.linspace(0, 1, 5)</code> returns an array with how many elements?",opts:["5","4","6","Depends on dtype"],a:0},
+  {topic:"Array Creation",q:"Which creates a diagonal matrix from a 1D array?",opts:["np.diag(arr)","np.diagonal(arr)","np.diagflat(arr)","Both A and C"],a:3},
+  {topic:"Array Creation",q:"What does <code>np.full((2,2), 7)</code> create?",opts:["2×2 array filled with 7","2×2 array of 7 zeros","7×7 array of twos","Error"],a:0},
+  {topic:"Array Creation",q:"<code>np.fromfunction(lambda i,j: i+j, (3,3))</code> creates:",opts:["A 3×3 array where each element equals its row+col index","A 3×3 identity matrix","A 3×3 array of zeros","Error"],a:0},
+  {topic:"Array Creation",q:"Which of these creates an array from a string?",opts:["np.fromstring('1 2 3', sep=' ')","np.array('1 2 3')","np.parse('1 2 3')","np.frombuffer()"],a:0},
+  {topic:"Array Creation",q:"What does <code>np.zeros_like(arr)</code> do?",opts:["Returns array of zeros with same shape/dtype as arr","Returns array of zeros with same values as arr","Converts arr to zero-indexed","Raises error if arr is not float"],a:0},
+  {topic:"Array Creation",q:"<code>np.tile(arr, (2,3))</code> repeats arr:",opts:["2 times along rows, 3 times along cols","3 times along rows, 2 times along cols","6 times in total","Into a 2D array always"],a:0},
+
+  {topic:"Data Types",q:"How do you check the data type of a NumPy array <code>a</code>?",opts:["a.dtype","a.type","type(a)","a.kind"],a:0},
+  {topic:"Data Types",q:"Which NumPy dtype stores a 64-bit complex number?",opts:["complex128","complex64","float128","complex256"],a:0},
+  {topic:"Data Types",q:"What is the result of <code>np.array([1,2,3], dtype='float32').dtype</code>?",opts:["float32","float64","int32","complex64"],a:0},
+  {topic:"Data Types",q:"Which attribute gives the number of bytes used per element?",opts:["itemsize","nbytes","size","strides"],a:0},
+  {topic:"Data Types",q:"<code>np.array([True, False, True]).dtype</code> returns:",opts:["bool","int8","int64","object"],a:0},
+  {topic:"Data Types",q:"How do you cast array <code>a</code> from int to float64?",opts:["a.astype(np.float64)","a.cast(float)","np.cast(a, float64)","a.dtype = float64"],a:0},
+  {topic:"Data Types",q:"What does the dtype code <code>'U10'</code> represent?",opts:["Unicode string of max length 10","Unsigned 10-bit integer","10-element byte array","UTF-8 bytes"],a:0},
+  {topic:"Data Types",q:"Which NumPy scalar type is Python's <code>float</code> equivalent?",opts:["np.float64","np.float32","np.double","Both A and C"],a:3},
+  {topic:"Data Types",q:"What attribute gives the total number of bytes consumed by an array?",opts:["nbytes","itemsize","memsize","bytesize"],a:0},
+  {topic:"Data Types",q:"Which dtype flag indicates if data is stored little-endian or big-endian?",opts:["byteorder","endian","order","byte"],a:0},
+
+  {topic:"Reshaping",q:"What does <code>arr.reshape(3,-1)</code> do when arr has 12 elements?",opts:["Creates shape (3,4) array","Creates shape (3,12) array","Raises error","Creates (12,3) array"],a:0},
+  {topic:"Reshaping",q:"What is the difference between <code>reshape</code> and <code>resize</code>?",opts:["reshape returns a view; resize modifies in-place and can change total size","reshape modifies in-place; resize returns a copy","Both are identical","resize raises error always"],a:0},
+  {topic:"Reshaping",q:"<code>arr.flatten()</code> vs <code>arr.ravel()</code>:",opts:["flatten always returns a copy; ravel may return a view","ravel always returns a copy; flatten may return a view","Both return views","Both return copies"],a:0},
+  {topic:"Reshaping",q:"What does <code>np.squeeze(arr)</code> do?",opts:["Removes axes of length 1","Compresses non-zero elements","Squeezes min/max values","Reduces precision"],a:0},
+  {topic:"Reshaping",q:"How do you add a new axis to array <code>a</code> of shape (3,)?",opts:["a[np.newaxis,:] → (1,3)","a.expand()","a.add_axis(0)","np.addaxis(a)"],a:0},
+  {topic:"Reshaping",q:"<code>np.expand_dims(a, axis=0)</code> on shape (4,) gives:",opts:["(1,4)","(4,1)","(4,)","Error"],a:0},
+  {topic:"Reshaping",q:"How do you transpose a 2D array?",opts:["arr.T","np.transpose(arr)","arr.transpose()","All of the above"],a:3},
+  {topic:"Reshaping",q:"<code>arr.ndim</code> returns:",opts:["Number of dimensions","Number of elements","Array shape","Array size"],a:0},
+  {topic:"Reshaping",q:"For array of shape (2,3,4), <code>arr.size</code> equals:",opts:["24","9","12","Error"],a:0},
+  {topic:"Reshaping",q:"Which function stacks arrays along a new axis?",opts:["np.stack()","np.vstack()","np.hstack()","np.concatenate()"],a:0},
+
+  {topic:"Indexing & Slicing",q:"For a 2D array, what does <code>arr[1:3, 0:2]</code> select?",opts:["Rows 1-2, Columns 0-1","Rows 1-3, Columns 0-2","Rows 0-2, Columns 1-3","All rows, columns 0-2"],a:0},
+  {topic:"Indexing & Slicing",q:"What is fancy indexing in NumPy?",opts:["Indexing using integer arrays","Indexing using boolean masks","Negative indexing","Slice notation"],a:0},
+  {topic:"Indexing & Slicing",q:"<code>arr[-1]</code> selects:",opts:["Last element","First element","Second-to-last element","Raises IndexError"],a:0},
+  {topic:"Indexing & Slicing",q:"What does <code>arr[arr > 5]</code> do?",opts:["Returns elements > 5 using boolean mask","Selects row 5","Raises error","Returns indices > 5"],a:0},
+  {topic:"Indexing & Slicing",q:"<code>np.where(condition, x, y)</code> returns:",opts:["Elements from x where condition is True, else from y","Indices where condition is True","x if all True, y if all False","Error"],a:0},
+  {topic:"Indexing & Slicing",q:"For <code>arr = np.arange(10)</code>, what is <code>arr[2:8:2]</code>?",opts:["[2,4,6]","[2,4,6,8]","[2,3,4,5,6,7]","[0,2,4,6,8]"],a:0},
+  {topic:"Indexing & Slicing",q:"What does <code>np.take(arr, [0,2,4])</code> do?",opts:["Returns elements at indices 0, 2, 4","Takes first 4 elements","Takes every 2nd element starting at 0","Raises error"],a:0},
+  {topic:"Indexing & Slicing",q:"Ellipsis (...) in indexing:",opts:["Selects all dimensions not explicitly specified","Selects last element","Is invalid in NumPy","Copies the array"],a:0},
+  {topic:"Indexing & Slicing",q:"<code>arr[np.newaxis, :]</code> on shape (5,) gives shape:",opts:["(1,5)","(5,1)","(5,)","Error"],a:0},
+  {topic:"Indexing & Slicing",q:"Is slicing a NumPy array a copy or a view?",opts:["View (no data copy)","Copy (always)","Depends on dtype","Depends on size"],a:0},
+
+  {topic:"Broadcasting",q:"What is broadcasting in NumPy?",opts:["Automatic expansion of arrays to compatible shapes for element-wise ops","Sending arrays across a network","Converting arrays to lists","Parallel computing on arrays"],a:0},
+  {topic:"Broadcasting",q:"Can you add arrays of shape (3,1) and (1,4)?",opts:["Yes, result is (3,4)","No, incompatible shapes","Yes, result is (3,1)","Yes, result is (1,4)"],a:0},
+  {topic:"Broadcasting",q:"Broadcasting rule: dimensions are compatible if:",opts:["They are equal or one of them is 1","They are both the same","One is a multiple of the other","They have the same dtype"],a:0},
+  {topic:"Broadcasting",q:"Shape (5,) added to shape (3,5) broadcasts to:",opts:["(3,5)","(5,5)","Error","(15,)"],a:0},
+  {topic:"Broadcasting",q:"What happens when you add shapes (3,) and (4,)?",opts:["ValueError: shapes not aligned","Result (3,4)","Result (4,3)","Result (12,)"],a:0},
+  {topic:"Broadcasting",q:"<code>np.broadcast_shapes((1,3), (4,1))</code> returns:",opts:["(4,3)","(4,1)","(1,3)","Error"],a:0},
+
+  {topic:"Math Operations",q:"Which function computes element-wise square root?",opts:["np.sqrt()","np.squareroot()","np.root()","np.pow(arr,0.5)"],a:0},
+  {topic:"Math Operations",q:"<code>np.dot(a, b)</code> for 1D arrays computes:",opts:["Dot (inner) product","Cross product","Element-wise product","Matrix product"],a:0},
+  {topic:"Math Operations",q:"What does <code>np.cross(a, b)</code> compute?",opts:["Cross product","Dot product","Outer product","Matrix multiplication"],a:0},
+  {topic:"Math Operations",q:"Which operator performs matrix multiplication in Python 3.5+?",opts:["@","*","**","#"],a:0},
+  {topic:"Math Operations",q:"<code>np.absolute(arr)</code> is equivalent to:",opts:["np.abs(arr)","np.fabs(arr)","Both A and B","None"],a:2},
+  {topic:"Math Operations",q:"What does <code>np.floor_divide(7, 2)</code> return?",opts:["3","3.5","4","3.0"],a:0},
+  {topic:"Math Operations",q:"<code>np.log(np.e)</code> returns approximately:",opts:["1.0","2.718","0.0","0.434"],a:0},
+  {topic:"Math Operations",q:"Which function computes element-wise exponential?",opts:["np.exp()","np.power(np.e,arr)","Both A and B","np.expn()"],a:0},
+  {topic:"Math Operations",q:"<code>np.mod(10, 3)</code> returns:",opts:["1","3","0","3.33"],a:0},
+  {topic:"Math Operations",q:"What does <code>np.cumsum(arr)</code> do?",opts:["Returns cumulative sum along array","Returns total sum","Returns running maximum","Returns cumulative product"],a:0},
+  {topic:"Math Operations",q:"<code>np.diff(arr)</code> computes:",opts:["Discrete difference between consecutive elements","Second derivative","Absolute difference from mean","Max minus min"],a:0},
+  {topic:"Math Operations",q:"Which function returns element-wise maximum of two arrays?",opts:["np.maximum(a, b)","np.max(a, b)","np.fmax(a, b)","Both A and C"],a:3},
+  {topic:"Math Operations",q:"<code>np.round(2.675, 2)</code> may return 2.67 due to:",opts:["Floating-point representation","NumPy bug","Python version issue","dtype mismatch"],a:0},
+  {topic:"Math Operations",q:"What does <code>np.outer(a, b)</code> compute?",opts:["Outer product (a × bᵀ)","Dot product","Cross product","Kronecker product"],a:0},
+  {topic:"Math Operations",q:"<code>np.clip(arr, 2, 8)</code> does what?",opts:["Clamps values to [2,8]","Removes elements outside [2,8]","Raises error for out-of-range","Scales to [2,8]"],a:0},
+
+  {topic:"Statistics",q:"Which function computes the mean of array elements?",opts:["np.mean()","np.average()","Both (with differences)","np.sum()/len()"],a:2},
+  {topic:"Statistics",q:"What is the difference between <code>np.mean()</code> and <code>np.average()</code>?",opts:["average supports weights; mean does not","mean supports weights; average does not","They are identical","average ignores NaN"],a:0},
+  {topic:"Statistics",q:"<code>np.std(arr, ddof=1)</code> computes:",opts:["Sample standard deviation","Population standard deviation","Variance","Mean absolute deviation"],a:0},
+  {topic:"Statistics",q:"Which function finds the index of the maximum value?",opts:["np.argmax()","np.max()","np.where()","np.idxmax()"],a:0},
+  {topic:"Statistics",q:"<code>np.median([1,3,2,5,4])</code> returns:",opts:["3","3.0","2.5","4"],a:1},
+  {topic:"Statistics",q:"What does <code>np.percentile(arr, 75)</code> compute?",opts:["75th percentile (Q3)","75% of array max","Mean × 0.75","Percentile rank"],a:0},
+  {topic:"Statistics",q:"Which function computes the covariance matrix?",opts:["np.cov()","np.covariance()","np.corrcoef()","np.cov_matrix()"],a:0},
+  {topic:"Statistics",q:"<code>np.corrcoef(x, y)</code> returns:",opts:["Correlation coefficient matrix","Covariance matrix","Cross-correlation","Pearson r only"],a:0},
+  {topic:"Statistics",q:"Which function computes the variance?",opts:["np.var()","np.variance()","np.std()**2 only","np.cov()[0,0] only"],a:0},
+  {topic:"Statistics",q:"<code>np.nanmean(arr)</code> vs <code>np.mean(arr)</code>:",opts:["nanmean ignores NaN values; mean propagates NaN","mean ignores NaN; nanmean propagates NaN","Both ignore NaN","Both propagate NaN"],a:0},
+  {topic:"Statistics",q:"What does <code>np.histogram(data, bins=10)</code> return?",opts:["Tuple of (counts, bin_edges)","Just counts","Just bin edges","A histogram plot"],a:0},
+  {topic:"Statistics",q:"Which function computes bincount of integers?",opts:["np.bincount()","np.count()","np.histogram_int()","np.tally()"],a:0},
+
+  {topic:"Linear Algebra",q:"Which module provides linear algebra functions in NumPy?",opts:["np.linalg","np.algebra","np.linear","np.matrix"],a:0},
+  {topic:"Linear Algebra",q:"How do you compute the determinant of matrix A?",opts:["np.linalg.det(A)","np.det(A)","A.det()","np.determinant(A)"],a:0},
+  {topic:"Linear Algebra",q:"Which function finds eigenvalues and eigenvectors?",opts:["np.linalg.eig()","np.linalg.eigh()","Both (different use cases)","np.linalg.eigenvalues()"],a:2},
+  {topic:"Linear Algebra",q:"<code>np.linalg.inv(A)</code> computes:",opts:["Matrix inverse","Inverse determinant","Transpose inverse","Pseudo-inverse"],a:0},
+  {topic:"Linear Algebra",q:"What does <code>np.linalg.norm(arr)</code> compute by default?",opts:["Frobenius norm for 2D, L2 for 1D","L1 norm always","Max element","Sum of all elements"],a:0},
+  {topic:"Linear Algebra",q:"SVD in NumPy is performed by:",opts:["np.linalg.svd()","np.linalg.decompose()","np.linalg.svds()","np.svd()"],a:0},
+  {topic:"Linear Algebra",q:"Which function solves linear equation Ax = b?",opts:["np.linalg.solve(A, b)","np.linalg.lstsq(A, b)","Both (different conditions)","np.solve(A, b)"],a:2},
+  {topic:"Linear Algebra",q:"<code>np.linalg.matrix_rank(A)</code> returns:",opts:["Rank of matrix","Number of rows","Number of non-zero elements","Condition number"],a:0},
+  {topic:"Linear Algebra",q:"What is the Frobenius norm?",opts:["Square root of sum of squared elements","Sum of absolute values","Max singular value","Trace of A^T A"],a:0},
+  {topic:"Linear Algebra",q:"QR decomposition is computed by:",opts:["np.linalg.qr()","np.linalg.qrdecomp()","np.qr()","np.linalg.qr_decompose()"],a:0},
+  {topic:"Linear Algebra",q:"<code>np.trace(A)</code> computes:",opts:["Sum of diagonal elements","Product of diagonal elements","Sum of all elements","Determinant"],a:0},
+  {topic:"Linear Algebra",q:"Cholesky decomposition requires the matrix to be:",opts:["Positive-definite symmetric","Orthogonal","Diagonal","Square only"],a:0},
+
+  {topic:"Random",q:"Which function generates a random float in [0.0, 1.0)?",opts:["np.random.random()","np.random.rand()","np.random.uniform()","All of the above"],a:3},
+  {topic:"Random",q:"<code>np.random.randint(1, 10, size=5)</code> generates:",opts:["5 random integers from 1 to 9","5 random integers from 1 to 10","5 floats from 1 to 9","Error"],a:0},
+  {topic:"Random",q:"How do you set a random seed for reproducibility?",opts:["np.random.seed(42)","np.random.set_seed(42)","np.seed(42)","np.random.init(42)"],a:0},
+  {topic:"Random",q:"Which function draws samples from a normal distribution?",opts:["np.random.randn()","np.random.normal()","Both (different params)","np.random.gaussian()"],a:2},
+  {topic:"Random",q:"<code>np.random.choice(arr, size=3, replace=False)</code> does:",opts:["Samples 3 elements without replacement","Samples 3 elements with replacement","Returns first 3 elements","Error if size > arr.size"],a:0},
+  {topic:"Random",q:"Which function shuffles array in-place?",opts:["np.random.shuffle()","np.random.permutation()","Both","np.shuffle()"],a:0},
+  {topic:"Random",q:"<code>np.random.permutation(arr)</code> vs <code>np.random.shuffle(arr)</code>:",opts:["permutation returns shuffled copy; shuffle modifies in-place","shuffle returns shuffled copy; permutation modifies in-place","Both modify in-place","Both return copies"],a:0},
+  {topic:"Random",q:"Which generates samples from a binomial distribution?",opts:["np.random.binomial(n, p, size)","np.random.binom(n, p)","np.random.bernoulli(p, size)","np.random.bin(n,p)"],a:0},
+  {topic:"Random",q:"The new preferred way to create a random generator in modern NumPy is:",opts:["np.random.default_rng()","np.random.Generator()","np.random.RandomState()","np.random.new_rng()"],a:0},
+  {topic:"Random",q:"<code>np.random.poisson(lam=3, size=5)</code> draws from:",opts:["Poisson distribution with mean 3","Poisson with λ=5","Uniform (0,3)","Error"],a:0},
+
+  {topic:"Sorting & Searching",q:"Which function returns a sorted copy of an array?",opts:["np.sort()","arr.sort()","Both (different: np.sort is copy, arr.sort in-place)","np.argsort()"],a:2},
+  {topic:"Sorting & Searching",q:"<code>np.argsort(arr)</code> returns:",opts:["Indices that would sort arr","Sorted values","Rank of each element","Count of each element"],a:0},
+  {topic:"Sorting & Searching",q:"Which sorting algorithm is NumPy's default?",opts:["Quicksort","Mergesort","Heapsort","Timsort"],a:0},
+  {topic:"Sorting & Searching",q:"<code>np.searchsorted(arr, v)</code> requires arr to be:",opts:["Sorted in ascending order","Any order","Unique values only","Integer dtype"],a:0},
+  {topic:"Sorting & Searching",q:"Which function finds elements satisfying a condition and returns indices?",opts:["np.where(cond)","np.nonzero(arr)","Both (equivalent without x,y args)","np.find()"],a:2},
+  {topic:"Sorting & Searching",q:"<code>np.unique(arr)</code> returns:",opts:["Sorted unique elements","Unsorted unique elements","Unique elements and their counts","First occurrence of each unique element"],a:0},
+  {topic:"Sorting & Searching",q:"<code>np.unique(arr, return_counts=True)</code> returns:",opts:["Tuple of (unique values, counts)","Just counts","Unique values and first indices","Error"],a:0},
+  {topic:"Sorting & Searching",q:"<code>np.partition(arr, 3)</code> guarantees:",opts:["Element at index 3 is in correct sorted position","Array sorted up to index 3","Array partially sorted around pivot 3","Error"],a:0},
+
+  {topic:"Concatenation & Splitting",q:"Which function concatenates arrays along an existing axis?",opts:["np.concatenate()","np.stack()","np.combine()","np.join()"],a:0},
+  {topic:"Concatenation & Splitting",q:"<code>np.vstack([a, b])</code> stacks arrays:",opts:["Vertically (along axis 0)","Horizontally (along axis 1)","Along new axis","Diagonally"],a:0},
+  {topic:"Concatenation & Splitting",q:"<code>np.hstack([a, b])</code> stacks arrays:",opts:["Horizontally (along axis 1 for 2D)","Vertically","Along axis 0 always","Diagonally"],a:0},
+  {topic:"Concatenation & Splitting",q:"<code>np.split(arr, 3)</code> splits arr into:",opts:["3 equal parts","Parts of size 3","At indices [3]","Error if not divisible"],a:0},
+  {topic:"Concatenation & Splitting",q:"What is the difference between np.split and np.array_split?",opts:["array_split allows unequal splits; split requires equal","split allows unequal; array_split requires equal","They are identical","array_split raises error always"],a:0},
+  {topic:"Concatenation & Splitting",q:"<code>np.column_stack([a, b])</code> for 1D arrays a, b returns:",opts:["2D array with a and b as columns","Concatenated 1D array","Error","Stacked rows"],a:0},
+  {topic:"Concatenation & Splitting",q:"<code>np.dstack</code> stacks along which axis?",opts:["Third axis (depth)","First axis","Second axis","New axis at end"],a:0},
+
+  {topic:"Copy & Views",q:"When does NumPy create a view vs a copy?",opts:["Basic slicing creates view; fancy indexing creates copy","Fancy indexing creates view; slicing creates copy","Both always create views","Both always create copies"],a:0},
+  {topic:"Copy & Views",q:"Which method creates a deep copy of an array?",opts:["arr.copy()","arr.view()","np.copy(arr)","Both A and C"],a:3},
+  {topic:"Copy & Views",q:"How do you check if two arrays share memory?",opts:["np.shares_memory(a, b)","np.may_share_memory(a, b)","a.base is b","All of the above"],a:3},
+  {topic:"Copy & Views",q:"<code>arr.view()</code> creates:",opts:["New array object pointing to same data","A deep copy","An empty array with same shape","Raises error"],a:0},
+  {topic:"Copy & Views",q:"If <code>b = a[2:5]</code>, modifying b will:",opts:["Also modify a","Not affect a","Raise an error","Depends on dtype"],a:0},
+
+  {topic:"Structured Arrays",q:"What is a structured array in NumPy?",opts:["Array with compound dtype having named fields","Array that uses Python classes","Array with a tree structure","Array with variable-length rows"],a:0},
+  {topic:"Structured Arrays",q:"How do you access field 'age' in structured array <code>s</code>?",opts:["s['age']","s.age","s.field('age')","s.get('age')"],a:0},
+  {topic:"Structured Arrays",q:"Which function converts a structured array to a regular array?",opts:["np.lib.recfunctions.structured_to_unstructured()","np.unstructure()","arr.toarray()","np.flatten_struct()"],a:0},
+
+  {topic:"File I/O",q:"Which function saves a single array to a binary .npy file?",opts:["np.save()","np.savez()","np.dump()","np.tofile()"],a:0},
+  {topic:"File I/O",q:"How do you save multiple arrays to a .npz file?",opts:["np.savez('file', a=a, b=b)","np.save_multiple()","np.save('file', [a,b])","np.savez_compressed() only"],a:0},
+  {topic:"File I/O",q:"Which function loads a .npy file?",opts:["np.load()","np.read()","np.fromfile()","np.import()"],a:0},
+  {topic:"File I/O",q:"<code>np.loadtxt('data.csv', delimiter=',')</code> returns:",opts:["2D float array","List of strings","Structured array","Dictionary"],a:0},
+  {topic:"File I/O",q:"Which function saves to a text file?",opts:["np.savetxt()","np.save_text()","np.write()","np.totext()"],a:0},
+  {topic:"File I/O",q:"<code>np.savez_compressed()</code> vs <code>np.savez()</code>:",opts:["savez_compressed uses zlib compression; savez doesn't","They are identical","savez_compressed only saves one array","savez is faster always"],a:0},
+  {topic:"File I/O",q:"To load a specific array from .npz file <code>f</code>:",opts:["f['arr_name']","f.load('arr_name')","f.get('arr_name')","f.arr_name"],a:0},
+
+  {topic:"FFT",q:"Which module provides FFT functions in NumPy?",opts:["np.fft","np.fourier","np.transform","np.signal"],a:0},
+  {topic:"FFT",q:"<code>np.fft.fft(signal)</code> computes:",opts:["1D Discrete Fourier Transform","Inverse FFT","2D FFT","Fast Fourier series"],a:0},
+  {topic:"FFT",q:"Which function computes the inverse FFT?",opts:["np.fft.ifft()","np.fft.inv_fft()","np.fft.rfft()","np.fft.fft_inv()"],a:0},
+  {topic:"FFT",q:"<code>np.fft.rfft()</code> is used for:",opts:["Real-valued input (returns only positive frequencies)","Row-wise FFT","Reversed FFT","Radix-2 FFT only"],a:0},
+  {topic:"FFT",q:"<code>np.fft.fftfreq(n, d)</code> returns:",opts:["Frequency bins for FFT output","FFT of frequencies","Sampling rate","Period of signal"],a:0},
+  {topic:"FFT",q:"The output of <code>np.fft.fft(x)</code> has how many elements?",opts:["Same as x","Half of x","Twice as many as x","n//2 + 1"],a:0},
+
+  {topic:"Polynomials",q:"Which NumPy function evaluates a polynomial at given values?",opts:["np.polyval()","np.poly()","np.polyder()","np.polynomial.polynomial.polyval()"],a:0},
+  {topic:"Polynomials",q:"<code>np.polyfit(x, y, deg)</code> fits:",opts:["Least-squares polynomial of given degree","Exact polynomial through all points","Linear regression only","Error for deg > 2"],a:0},
+  {topic:"Polynomials",q:"Which function finds roots of a polynomial?",opts:["np.roots()","np.poly.roots()","np.polynomial.roots()","np.solve_poly()"],a:0},
+  {topic:"Polynomials",q:"<code>np.polymul(p1, p2)</code> computes:",opts:["Polynomial multiplication","Element-wise multiplication","Polynomial addition","Matrix multiply"],a:0},
+  {topic:"Polynomials",q:"<code>np.polyder(p)</code> returns:",opts:["Derivative of polynomial p","Integral of polynomial p","Roots of p","Value of p at x=0"],a:0},
+
+  {topic:"Memory & Performance",q:"What is the difference between C-order and Fortran-order arrays?",opts:["C-order is row-major; Fortran-order is column-major","C-order is column-major; Fortran-order is row-major","They are equivalent","C-order is 1D only"],a:0},
+  {topic:"Memory & Performance",q:"<code>np.ascontiguousarray(arr)</code> ensures:",opts:["Array is stored contiguously in memory","Array is transposed","Array is converted to C-order","Both A and C"],a:3},
+  {topic:"Memory & Performance",q:"What does <code>arr.flags</code> show?",opts:["Memory layout flags (C_CONTIGUOUS, F_CONTIGUOUS, WRITEABLE, etc.)","Data type flags","Shape flags","None of the above"],a:0},
+  {topic:"Memory & Performance",q:"Which attribute gives the step sizes (in bytes) for each dimension?",opts:["arr.strides","arr.steps","arr.itemsize","arr.stride_size"],a:0},
+  {topic:"Memory & Performance",q:"<code>np.asarray()</code> vs <code>np.array()</code>:",opts:["asarray doesn't copy if input is already an array; array may copy","array never copies; asarray always copies","They are identical","asarray raises error for lists"],a:0},
+
+  {topic:"Set Operations",q:"Which function computes set intersection of two arrays?",opts:["np.intersect1d()","np.intersection()","np.in1d()","np.common()"],a:0},
+  {topic:"Set Operations",q:"<code>np.union1d(a, b)</code> returns:",opts:["Sorted unique values in a or b","All values including duplicates","Elements only in a","Elements only in b"],a:0},
+  {topic:"Set Operations",q:"<code>np.setdiff1d(a, b)</code> returns:",opts:["Elements in a but not in b","Elements in b but not in a","Symmetric difference","Elements in both"],a:0},
+  {topic:"Set Operations",q:"<code>np.in1d(a, b)</code> returns:",opts:["Boolean array: True where a element is in b","Indices of common elements","Common elements array","Integer count"],a:0},
+  {topic:"Set Operations",q:"<code>np.setxor1d(a, b)</code> computes:",opts:["Symmetric difference (in a or b, but not both)","Intersection","Union","Cross-product"],a:0},
+
+  {topic:"Boolean Ops",q:"Which function tests if all elements are True?",opts:["np.all()","np.any()","np.alltrue()","np.every()"],a:0},
+  {topic:"Boolean Ops",q:"<code>np.logical_and(a, b)</code> vs <code>a & b</code>:",opts:["Both work; & is bitwise, logical_and is element-wise logical","They are identical","& raises error for bool arrays","logical_and is deprecated"],a:0},
+  {topic:"Boolean Ops",q:"Which function checks if two arrays are element-wise equal?",opts:["np.array_equal(a, b)","np.equal(a, b)","a == b","Both B and C"],a:3},
+  {topic:"Boolean Ops",q:"<code>np.isnan(arr)</code> returns:",opts:["Boolean array True where NaN","Indices of NaN","Count of NaN","Array without NaN"],a:0},
+  {topic:"Boolean Ops",q:"<code>np.isfinite(arr)</code> returns False for:",opts:["NaN, +inf, -inf","Only NaN","Only ±inf","Zero values"],a:0},
+  {topic:"Boolean Ops",q:"<code>np.allclose(a, b, rtol, atol)</code> checks:",opts:["Element-wise approximate equality within tolerance","Exact equality","Shape equality","Dtype equality"],a:0},
+
+  {topic:"Window Functions",q:"Which function computes the Hamming window?",opts:["np.hamming()","np.window.hamming()","np.signal.hamming()","np.hanning()"],a:0},
+  {topic:"Window Functions",q:"<code>np.blackman(N)</code> returns:",opts:["Blackman window of N points","Blackman filter","Binary mask","Error"],a:0},
+  {topic:"Window Functions",q:"Which window function is the default for FFT in NumPy?",opts:["Rectangular (no window)","Hamming","Hanning","Blackman"],a:0},
+
+  {topic:"Advanced",q:"What does <code>np.einsum('ij,jk->ik', A, B)</code> compute?",opts:["Matrix multiplication A @ B","Element-wise multiply","Outer product","Dot product of all elements"],a:0},
+  {topic:"Advanced",q:"<code>np.einsum('ii', A)</code> computes:",opts:["Trace of A","Determinant of A","Diagonal of A","Sum of A"],a:0},
+  {topic:"Advanced",q:"What is a NumPy ufunc?",opts:["Universal function operating element-wise with broadcasting","User-defined function","Unfalsifiable function","Utility function"],a:0},
+  {topic:"Advanced",q:"Which decorator creates a ufunc from a Python function?",opts:["np.frompyfunc()","np.vectorize()","Both (different outputs)","@np.ufunc"],a:2},
+  {topic:"Advanced",q:"<code>np.vectorize(f)</code> vs a true ufunc:",opts:["vectorize is a loop in Python; true ufunc is C-level","They have equal performance","vectorize is faster","vectorize supports all dtypes automatically"],a:0},
+  {topic:"Advanced",q:"What does <code>np.lib.stride_tricks.as_strided()</code> allow?",opts:["Create views with custom strides (sliding windows etc.)","Change dtype safely","Add strides to structured arrays","Sort by stride"],a:0},
+  {topic:"Advanced",q:"<code>np.memmap()</code> creates:",opts:["Memory-mapped array stored on disk","In-memory cache","Shared memory array","Memoized computation"],a:0},
+  {topic:"Advanced",q:"What is the purpose of <code>np.errstate()</code>?",opts:["Context manager to control floating-point error handling","Error logging","Exception catcher","Error statistics"],a:0},
+  {topic:"Advanced",q:"<code>np.seterr(all='raise')</code> makes NumPy:",opts:["Raise exceptions for all floating-point errors","Ignore all errors","Log all errors","Reset error state"],a:0},
+  {topic:"Advanced",q:"Which attribute of a ufunc holds partial results for reduction?",opts:["ufunc.reduce","ufunc.accumulate","ufunc.outer","ufunc.identity"],a:3},
+  {topic:"Advanced",q:"<code>np.char</code> module provides:",opts:["Vectorized string operations on string arrays","Character encoding tools","Charmap utilities","None of the above"],a:0},
+  {topic:"Advanced",q:"<code>np.ma</code> module provides:",opts:["Masked array operations","Matrix algebra","Memory alignment tools","Meta-array utilities"],a:0},
+  {topic:"Advanced",q:"What does <code>np.ma.masked_where(cond, arr)</code> do?",opts:["Masks elements of arr where cond is True","Removes elements where cond is True","Sets elements to 0 where cond is True","Returns boolean mask only"],a:0},
+  {topic:"Advanced",q:"<code>np.testing.assert_array_almost_equal(a, b, decimal=6)</code> checks:",opts:["Arrays equal to 6 decimal places","Arrays equal exactly","Array shapes equal","Array dtypes equal"],a:0},
+
+  {topic:"Utility",q:"<code>np.info(np.add)</code> displays:",opts:["Help/docstring for np.add","The source code","Performance stats","Error info"],a:0},
+  {topic:"Utility",q:"Which function broadcasts two arrays and returns iterator?",opts:["np.broadcast()","np.broadcast_to()","np.broadcast_arrays()","np.iter_broadcast()"],a:0},
+  {topic:"Utility",q:"<code>np.broadcast_to(arr, shape)</code> creates:",opts:["Read-only view with broadcast shape","Copy with broadcast shape","Writable view","Error if not broadcastable"],a:0},
+  {topic:"Utility",q:"Which function checks element membership like Python's 'in'?",opts:["np.isin()","np.contains()","np.member()","np.in1d() only"],a:0},
+  {topic:"Utility",q:"<code>np.apply_along_axis(func, axis, arr)</code> applies func:",opts:["Along slices of arr at given axis","To the entire arr","Axis times to arr","Column by column only"],a:0},
+  {topic:"Utility",q:"<code>np.apply_over_axes(func, arr, axes)</code>:",opts:["Applies func over multiple axes repeatedly","Applies func element-wise","Is deprecated","Equivalent to apply_along_axis"],a:0},
+  {topic:"Utility",q:"Which function returns number of non-zero elements?",opts:["np.count_nonzero()","np.nonzero()","len(np.nonzero(arr)[0])","Both A and C"],a:3},
+  {topic:"Utility",q:"<code>np.piecewise(x, condlist, funclist)</code> computes:",opts:["Piecewise-defined function evaluated at x","Piecewise linear interpolation","Piecewise polynomial","Error always"],a:0},
+  {topic:"Utility",q:"Which function sorts an array of indices into bins?",opts:["np.digitize()","np.bucket()","np.bin_indices()","np.quantize()"],a:0},
+  {topic:"Utility",q:"<code>np.interp(x, xp, fp)</code> computes:",opts:["1D linear interpolation","Spline interpolation","Nearest-neighbor interpolation","Extrapolation"],a:0},
+  {topic:"Utility",q:"<code>np.gradient(f)</code> approximates:",opts:["Numerical gradient using central differences","Exact derivative","Gradient descent step","Hessian matrix"],a:0},
+  {topic:"Utility",q:"Which function computes cross-correlation of two 1D sequences?",opts:["np.correlate()","np.cross_correlate()","np.fft.fft() trick only","np.xcorr()"],a:0},
+  {topic:"Utility",q:"<code>np.convolve(a, v, mode='full')</code> returns length:",opts:["len(a)+len(v)-1","max(len(a),len(v))","min(len(a),len(v))","len(a)*len(v)"],a:0},
+  {topic:"Utility",q:"<code>np.unwrap(p)</code> is used for:",opts:["Removing phase discontinuities > π from angle array","Reversing array","Expanding ranges","Normalizing to [0,2π]"],a:0},
+];
+
+let quizQuestions = [];
+let userAnswers   = [];
+let currentQ      = 0;
+let timerInterval = null;
+let timeLeft      = 90 * 60; 
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function startTimer() {
+  clearInterval(timerInterval);
+  timeLeft = 90 * 60;
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    updateTimerDisplay();
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      submitQuiz(true);
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+  const s = (timeLeft % 60).toString().padStart(2, '0');
+  const el = document.getElementById('timerDisplay');
+  if (el) {
+    el.textContent = `${m}:${s}`;
+    el.parentElement.style.color = timeLeft < 300 ? 'var(--danger)' : 'var(--warn)';
+  }
+}
+
+function startQuiz() {
+  quizQuestions = shuffle(QUESTION_BANK).slice(0, 70);
+  userAnswers   = new Array(70).fill(null);
+  currentQ      = 0;
+
+  buildNavDots();
+  renderQuestion();
+  showScreen('quiz');
+  startTimer();
+}
+
+function buildNavDots() {
+  const container = document.getElementById('navDots');
+  container.innerHTML = '';
+  for (let i = 0; i < 70; i++) {
+    const d = document.createElement('button');
+    d.className = 'nav-dot' + (i === 0 ? ' current' : '');
+    d.textContent = i + 1;
+    d.onclick = () => goToQuestion(i);
+    container.appendChild(d);
+  }
+}
+
+function updateNavDots() {
+  const dots = document.querySelectorAll('.nav-dot');
+  dots.forEach((d, i) => {
+    d.className = 'nav-dot';
+    if (i === currentQ) d.classList.add('current');
+    else if (userAnswers[i] !== null) d.classList.add('answered');
+  });
+}
+
+function renderQuestion() {
+  const q = quizQuestions[currentQ];
+  const container = document.getElementById('questionContainer');
+
+  const letters = ['A', 'B', 'C', 'D'];
+  const optionsHTML = q.opts.map((opt, i) => `
+    <button class="option-btn ${userAnswers[currentQ] === i ? 'selected' : ''}"
+            onclick="selectAnswer(${i})">
+      <span class="option-label">${letters[i]}</span>
+      <span>${opt}</span>
+    </button>
+  `).join('');
+
+  container.innerHTML = `
+    <div class="question-card">
+      <div class="q-tag">📌 ${q.topic}</div>
+      <div class="q-number">Question ${currentQ + 1} of 70</div>
+      <div class="q-text">${q.q}</div>
+      <div class="options-grid">${optionsHTML}</div>
+    </div>
+  `;
+
+  document.getElementById('currentQNum').textContent = currentQ + 1;
+  document.getElementById('progressBar').style.width = ((currentQ + 1) / 70 * 100) + '%';
+
+  document.getElementById('btnPrev').disabled = currentQ === 0;
+  document.getElementById('btnNext').disabled = currentQ === 69;
+
+  updateNavDots();
+  document.getElementById('unansWarning').style.display = 'none';
+}
+
+function selectAnswer(idx) {
+  userAnswers[currentQ] = idx;
+  renderQuestion();
+}
+
+function navigate(dir) {
+  const next = currentQ + dir;
+  if (next >= 0 && next < 70) goToQuestion(next);
+}
+
+function goToQuestion(idx) {
+  currentQ = idx;
+  renderQuestion();
+  document.getElementById('questionContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function openSubmitModal() {
+  const unanswered = userAnswers.filter(a => a === null).length;
+  document.getElementById('modalText').textContent =
+    unanswered > 0
+      ? `You have ${unanswered} unanswered question${unanswered > 1 ? 's' : ''}. Submit anyway?`
+      : 'You have answered all 70 questions. Ready to submit?';
+  document.getElementById('submitModal').classList.add('open');
+}
+
+function closeSubmitModal() {
+  document.getElementById('submitModal').classList.remove('open');
+}
+
+function submitQuiz(autoSubmit = false) {
+  clearInterval(timerInterval);
+  closeSubmitModal();
+
+  let correct = 0, wrong = 0, skipped = 0;
+  const breakdown = [];
+
+  quizQuestions.forEach((q, i) => {
+    const ans = userAnswers[i];
+    const letters = ['A', 'B', 'C', 'D'];
+    if (ans === null) {
+      skipped++;
+      breakdown.push({ status: 'skip', q: q.q, correct: q.opts[q.a], your: null });
+    } else if (ans === q.a) {
+      correct++;
+      breakdown.push({ status: 'correct', q: q.q, correct: q.opts[q.a], your: q.opts[ans] });
+    } else {
+      wrong++;
+      breakdown.push({ status: 'wrong', q: q.q, correct: q.opts[q.a], your: q.opts[ans] });
+    }
+  });
+
+  const pct = Math.round((correct / 70) * 100);
+  showResults(correct, wrong, skipped, pct, breakdown);
+}
+
+function showResults(correct, wrong, skipped, pct, breakdown) {
+  document.getElementById('resCorrect').textContent = correct;
+  document.getElementById('resWrong').textContent   = wrong;
+  document.getElementById('resSkipped').textContent = skipped;
+  document.getElementById('scorePct').textContent   = pct + '%';
+
+  let grade, msg, color;
+  if (pct >= 90)      { grade = '🏆 Outstanding!';    msg = 'You have mastered NumPy!';                    color = '#00d4ff'; }
+  else if (pct >= 80) { grade = '🥇 Excellent!';      msg = 'Great command of NumPy concepts.';            color = '#10b981'; }
+  else if (pct >= 70) { grade = '🥈 Good Job!';       msg = 'Solid understanding. Keep practicing!';      color = '#a3e635'; }
+  else if (pct >= 60) { grade = '🥉 Satisfactory';    msg = 'Review the topics you missed.';              color = '#f59e0b'; }
+  else if (pct >= 50) { grade = '📚 Needs Work';      msg = 'Focus on core NumPy fundamentals.';          color = '#f97316'; }
+  else                { grade = '🔁 Keep Studying';   msg = 'Review the NumPy documentation and retry!';  color = '#ef4444'; }
+
+  document.getElementById('resultGrade').textContent = grade;
+  document.getElementById('resultGrade').style.color = color;
+  document.getElementById('resultMsg').textContent   = msg;
+  document.getElementById('scorePct').style.color    = color;
+
+  const ring = document.getElementById('ringFill');
+  const circumference = 471;
+  ring.style.stroke = color;
+  setTimeout(() => {
+    ring.style.strokeDashoffset = circumference - (circumference * pct / 100);
+  }, 200);
+
+  const list = document.getElementById('breakdownList');
+  list.innerHTML = breakdown.map((item, i) => {
+    if (item.status === 'correct') {
+      return `<div class="breakdown-item correct-item">
+        <span class="breakdown-icon">✅</span>
+        <div>
+          <div class="breakdown-q"><strong>Q${i+1}:</strong> ${item.q.replace(/<[^>]+>/g,'')}</div>
+          <div class="breakdown-ans">Your answer: ${item.your}</div>
+        </div>
+      </div>`;
+    } else if (item.status === 'wrong') {
+      return `<div class="breakdown-item wrong-item">
+        <span class="breakdown-icon">❌</span>
+        <div>
+          <div class="breakdown-q"><strong>Q${i+1}:</strong> ${item.q.replace(/<[^>]+>/g,'')}</div>
+          <div class="breakdown-ans your">Your answer: ${item.your}</div>
+          <div class="breakdown-ans" style="color:var(--accent3)">Correct: ${item.correct}</div>
+        </div>
+      </div>`;
+    } else {
+      return `<div class="breakdown-item skip-item">
+        <span class="breakdown-icon">⏭</span>
+        <div>
+          <div class="breakdown-q"><strong>Q${i+1}:</strong> ${item.q.replace(/<[^>]+>/g,'')}</div>
+          <div class="breakdown-ans">Skipped — Correct was: ${item.correct}</div>
+        </div>
+      </div>`;
+    }
+  }).join('');
+
+  showScreen('result');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
