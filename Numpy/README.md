@@ -46,30 +46,30 @@ NewPixel=OldPixel+Value
 
 This project teaches:
 
-NumPy arrays
-Matrix operations
-Image representation
-RGB channels
-Vectorization
-Broadcasting
-Image manipulation fundamentals
+- NumPy arrays
+- Matrix operations
+- Image representation
+- RGB channels
+- Vectorization
+- Broadcasting
+- Image manipulation fundamentals
 
 
 # Future Improvements
-Blur filter
-Sharpen filter
-Edge detection
-Rotation
-Flip filters
-GUI application
-Batch image processing
-Custom kernels
-Histogram equalization
+- Blur filter
+- Sharpen filter
+- Edge detection
+- Rotation
+- Flip filters
+- GUI application
+- Batch image processing
+- Custom kernels
+- Histogram equalization
 
 
 
 # Author
-Parvinder
+- Parvinder
 
 Built for learning NumPy and image processing fundamentals.
 
