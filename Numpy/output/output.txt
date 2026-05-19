@@ -1,0 +1,3 @@
+output/grayscale.png
+output/negative.png
+output/brightness.png
