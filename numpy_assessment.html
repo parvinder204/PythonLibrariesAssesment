@@ -44,7 +44,6 @@
   .screen { display: none; position: relative; z-index: 1; }
   .screen.active { display: block; }
 
-  /* ── LANDING ── */
   #landing {
     min-height: 100vh;
     display: flex;
@@ -155,7 +154,6 @@
   .btn-start:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 8px 40px rgba(0,212,255,.5); }
   .btn-start:active { transform: scale(.98); }
 
-  /* ── QUIZ ── */
   #quiz {
     max-width: 900px;
     margin: 0 auto;
@@ -376,7 +374,6 @@
   }
   .btn-submit:hover { transform: translateY(-1px); box-shadow: 0 6px 30px rgba(16,185,129,.5); }
 
-  /* ── RESULT ── */
   #result { min-height: 100vh; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; }
   .result-wrapper { max-width: 700px; width: 100%; }
   .result-hero { text-align: center; margin-bottom: 40px; }
@@ -434,7 +431,6 @@
   }
   .btn-home:hover { border-color: var(--accent); color: var(--accent); }
 
-  /* Modal */
   .modal-overlay {
     position: fixed; inset: 0;
     background: rgba(0,0,0,.7);
@@ -576,203 +572,168 @@
 </div>
 
 <script>
-//  QUESTION BANK  (155 questions)
+
 const QUESTION_BANK = [
-
-  {topic:"Array Creation",type:"conceptual",q:"Which function is used to create a NumPy array from a Python list?",opts:["np.array()","np.create()","np.make()","np.list_to_array()"],a:0},
-  {topic:"Array Creation",type:"conceptual",q:"What does <code>np.zeros(5)</code> return?",opts:["An array of five 0.0 values","An array of five 1 values","An empty array","An array of five None values"],a:0},
-  {topic:"Array Creation",type:"conceptual",q:"Which function creates an array filled with ones?",opts:["np.ones()","np.full(1)","np.zeros() + 1 only","np.init_ones()"],a:0},
-  {topic:"Array Creation",type:"conceptual",q:"What shape does <code>np.zeros((3, 4))</code> produce?",opts:["3 rows and 4 columns","4 rows and 3 columns","A 1D array of length 7","A 1D array of length 12"],a:0},
-  {topic:"Array Creation",type:"conceptual",q:"Which function creates an array of evenly-spaced values given a start, stop, and step?",opts:["np.arange()","np.linspace()","np.range()","np.space()"],a:0},
-  {topic:"Array Creation",type:"conceptual",q:"Which function creates an array of evenly-spaced values given a start, stop, and number of points?",opts:["np.linspace()","np.arange()","np.logspace()","np.evenly()"],a:0},
-  {topic:"Array Creation",type:"conceptual",q:"What does <code>np.eye(3)</code> create?",opts:["3×3 identity matrix","3×3 matrix of ones","3-element array","3×3 zeros matrix"],a:0},
-  {topic:"Array Creation",type:"conceptual",q:"How do you create a 2×3 array filled with the value 7?",opts:["np.full((2,3), 7)","np.fill((2,3), 7)","np.zeros((2,3)) + 7 only","np.ones((2,3)) * 7 only"],a:0},
-  {topic:"Array Creation",type:"conceptual",q:"What does <code>np.empty((2,2))</code> do?",opts:["Creates an uninitialized 2×2 array","Creates a 2×2 array of zeros","Creates a 2×2 array of NaN","Raises a ValueError"],a:0},
-  {topic:"Array Creation",type:"conceptual",q:"What is the default data type of <code>np.zeros(4)</code>?",opts:["float64","int64","float32","int32"],a:0},
-
-  {topic:"Array Creation",type:"snippet",q:"What is the output of the following code?\n<pre>import numpy as np\na = np.arange(0, 10, 3)\nprint(a)</pre>",opts:["[0 3 6 9]","[0 3 6]","[0 3 6 9 12]","[1 4 7 10]"],a:0},
-  {topic:"Array Creation",type:"snippet",q:"What does this code print?\n<pre>import numpy as np\na = np.linspace(0, 1, 5)\nprint(len(a))</pre>",opts:["5","4","6","1"],a:0},
-  {topic:"Array Creation",type:"snippet",q:"What is the output?\n<pre>import numpy as np\na = np.full((2,2), 9)\nprint(a[1][0])</pre>",opts:["9","0","2","Error"],a:0},
-  {topic:"Array Creation",type:"snippet",q:"What does this code output?\n<pre>import numpy as np\na = np.zeros_like(np.array([1, 2, 3]))\nprint(a)</pre>",opts:["[0 0 0]","[1 2 3]","[0. 0. 0.]","Error"],a:0},
-  {topic:"Array Creation",type:"snippet",q:"What is printed?\n<pre>import numpy as np\na = np.ones((3,))\nprint(a.shape)</pre>",opts:["(3,)","(1, 3)","(3, 1)","3"],a:0},
-
-  {topic:"Array Creation",type:"truefalse",q:"True or False: <code>np.arange(5)</code> and <code>np.array([0,1,2,3,4])</code> produce arrays with the same values.",opts:["True","False","Cannot determine","Depends on Python version"],a:0},
-  {topic:"Array Creation",type:"truefalse",q:"True or False: <code>np.zeros((3,3))</code> creates an integer array by default.",opts:["False — it creates float64 by default","True — it creates int64","True — it creates int32","False — it creates float32"],a:0},
-  {topic:"Array Creation",type:"truefalse",q:"True or False: <code>np.linspace(0, 1, 5)</code> includes both endpoints 0 and 1.",opts:["True","False","Only the start point is included","Only the end point is included"],a:0},
-
-  {topic:"Data Types",type:"conceptual",q:"How do you check the data type of a NumPy array <code>a</code>?",opts:["a.dtype","type(a)","a.type","a.kind"],a:0},
-  {topic:"Data Types",type:"conceptual",q:"Which NumPy dtype represents a 64-bit floating point number?",opts:["np.float64","np.float32","np.double64","np.real64"],a:0},
-  {topic:"Data Types",type:"conceptual",q:"What does <code>a.astype(np.int32)</code> do?",opts:["Converts array a to int32 dtype","Changes the shape to int32","Rounds values to int32","Raises a TypeError"],a:0},
-  {topic:"Data Types",type:"conceptual",q:"What does the <code>itemsize</code> attribute return?",opts:["Number of bytes per element","Total bytes of the array","Number of elements","Data type code"],a:0},
-  {topic:"Data Types",type:"conceptual",q:"Which dtype is used for boolean arrays in NumPy?",opts:["bool","bool8","np.boolean","int1"],a:0},
-
-  {topic:"Data Types",type:"snippet",q:"What does this code print?\n<pre>import numpy as np\na = np.array([1, 2, 3])\nprint(a.dtype)</pre>",opts:["int64","float64","int32","object"],a:0},
+  {topic:"Array Creation",type:"conceptual",q:"Which function is used to create a NumPy array from a Python list?",opts:["np.array()","np.create()","np.list_to_array()","np.make()"],a:0},
+  {topic:"Array Creation",type:"conceptual",q:"What does <code>np.zeros(5)</code> return?",opts:["An array of five 1 values","An array of five None values","An empty array","An array of five 0.0 values"],a:3},
+  {topic:"Array Creation",type:"conceptual",q:"Which function creates an array filled with ones?",opts:["np.full(1)","np.init_ones()","np.zeros() + 1 only","np.ones()"],a:3},
+  {topic:"Array Creation",type:"conceptual",q:"What shape does <code>np.zeros((3, 4))</code> produce?",opts:["A 1D array of length 7","4 rows and 3 columns","A 1D array of length 12","3 rows and 4 columns"],a:3},
+  {topic:"Array Creation",type:"conceptual",q:"Which function creates an array of evenly-spaced values given a start, stop, and step?",opts:["np.linspace()","np.space()","np.arange()","np.range()"],a:2},
+  {topic:"Array Creation",type:"conceptual",q:"Which function creates an array of evenly-spaced values given a start, stop, and number of points?",opts:["np.logspace()","np.evenly()","np.arange()","np.linspace()"],a:3},
+  {topic:"Array Creation",type:"conceptual",q:"What does <code>np.eye(3)</code> create?",opts:["3Ã—3 zeros matrix","3Ã—3 identity matrix","3-element array","3Ã—3 matrix of ones"],a:1},
+  {topic:"Array Creation",type:"conceptual",q:"How do you create a 2Ã—3 array filled with the value 7?",opts:["np.ones((2,3)) * 7 only","np.fill((2,3), 7)","np.zeros((2,3)) + 7 only","np.full((2,3), 7)"],a:3},
+  {topic:"Array Creation",type:"conceptual",q:"What does <code>np.empty((2,2))</code> do?",opts:["Raises a ValueError","Creates an uninitialized 2Ã—2 array","Creates a 2Ã—2 array of NaN","Creates a 2Ã—2 array of zeros"],a:1},
+  {topic:"Array Creation",type:"conceptual",q:"What is the default data type of <code>np.zeros(4)</code>?",opts:["float64","int32","float32","int64"],a:0},
+  {topic:"Array Creation",type:"snippet",q:"What is the output of the following code?\n<pre>import numpy as np\na = np.arange(0, 10, 3)\nprint(a)</pre>",opts:["[0 3 6]","[1 4 7 10]","[0 3 6 9]","[0 3 6 9 12]"],a:2},
+  {topic:"Array Creation",type:"snippet",q:"What does this code print?\n<pre>import numpy as np\na = np.linspace(0, 1, 5)\nprint(len(a))</pre>",opts:["5","4","1","6"],a:0},
+  {topic:"Array Creation",type:"snippet",q:"What is the output?\n<pre>import numpy as np\na = np.full((2,2), 9)\nprint(a[1][0])</pre>",opts:["9","2","Error","0"],a:0},
+  {topic:"Array Creation",type:"snippet",q:"What does this code output?\n<pre>import numpy as np\na = np.zeros_like(np.array([1, 2, 3]))\nprint(a)</pre>",opts:["Error","[0 0 0]","[1 2 3]","[0. 0. 0.]"],a:1},
+  {topic:"Array Creation",type:"snippet",q:"What is printed?\n<pre>import numpy as np\na = np.ones((3,))\nprint(a.shape)</pre>",opts:["(1, 3)","(3,)","(3, 1)","3"],a:1},
+  {topic:"Array Creation",type:"truefalse",q:"True or False: <code>np.arange(5)</code> and <code>np.array([0,1,2,3,4])</code> produce arrays with the same values.",opts:["Cannot determine","False","True","Depends on Python version"],a:2},
+  {topic:"Array Creation",type:"truefalse",q:"True or False: <code>np.zeros((3,3))</code> creates an integer array by default.",opts:["False â€” it creates float64 by default","False â€” it creates float32","True â€” it creates int64","True â€” it creates int32"],a:0},
+  {topic:"Array Creation",type:"truefalse",q:"True or False: <code>np.linspace(0, 1, 5)</code> includes both endpoints 0 and 1.",opts:["False","True","Only the start point is included","Only the end point is included"],a:1},
+  {topic:"Data Types",type:"conceptual",q:"How do you check the data type of a NumPy array <code>a</code>?",opts:["a.type","type(a)","a.kind","a.dtype"],a:3},
+  {topic:"Data Types",type:"conceptual",q:"Which NumPy dtype represents a 64-bit floating point number?",opts:["np.real64","np.double64","np.float64","np.float32"],a:2},
+  {topic:"Data Types",type:"conceptual",q:"What does <code>a.astype(np.int32)</code> do?",opts:["Changes the shape to int32","Rounds values to int32","Raises a TypeError","Converts array a to int32 dtype"],a:3},
+  {topic:"Data Types",type:"conceptual",q:"What does the <code>itemsize</code> attribute return?",opts:["Data type code","Total bytes of the array","Number of elements","Number of bytes per element"],a:3},
+  {topic:"Data Types",type:"conceptual",q:"Which dtype is used for boolean arrays in NumPy?",opts:["int1","np.boolean","bool","bool8"],a:2},
+  {topic:"Data Types",type:"snippet",q:"What does this code print?\n<pre>import numpy as np\na = np.array([1, 2, 3])\nprint(a.dtype)</pre>",opts:["object","int64","float64","int32"],a:1},
   {topic:"Data Types",type:"snippet",q:"What is the output?\n<pre>import numpy as np\na = np.array([1.5, 2.5])\nb = a.astype(int)\nprint(b)</pre>",opts:["[1 2]","[1.5 2.5]","[2 3]","Error"],a:0},
-  {topic:"Data Types",type:"snippet",q:"What does this print?\n<pre>import numpy as np\na = np.array([True, False, True])\nprint(a.dtype)</pre>",opts:["bool","int8","int64","object"],a:0},
-
-  {topic:"Data Types",type:"truefalse",q:"True or False: Converting a float array to int using <code>astype</code> truncates (not rounds) the decimal part.",opts:["True","False","It rounds to nearest","Depends on platform"],a:0},
-  {topic:"Data Types",type:"truefalse",q:"True or False: <code>np.array([1, 2, 3.0])</code> creates an integer array.",opts:["False — it becomes float64 because of 3.0","True — integers dominate","True — only the last element changes","False — it raises a TypeError"],a:0},
-
-  {topic:"Indexing & Slicing",type:"conceptual",q:"What does negative indexing like <code>arr[-1]</code> return?",opts:["The last element","The first element","A reversed array","Raises IndexError"],a:0},
-  {topic:"Indexing & Slicing",type:"conceptual",q:"For a 2D array, what does <code>arr[0, :]</code> select?",opts:["The entire first row","The entire first column","The first element","A 2D sub-array"],a:0},
-  {topic:"Indexing & Slicing",type:"conceptual",q:"What is Boolean indexing?",opts:["Using a True/False array as a mask to select elements","Using negative numbers to index","Indexing with integer lists","Slicing with step values"],a:0},
-  {topic:"Indexing & Slicing",type:"conceptual",q:"What does <code>arr[1:4]</code> return for a 1D array?",opts:["Elements at indices 1, 2, 3","Elements at indices 1, 2, 3, 4","Element at index 1 to end","Elements at indices 0, 1, 2, 3"],a:0},
-  {topic:"Indexing & Slicing",type:"conceptual",q:"What does <code>arr[::2]</code> select?",opts:["Every second element starting from index 0","First two elements","Elements at even positions only (same as above)","Both A and C are correct"],a:3},
-  {topic:"Indexing & Slicing",type:"conceptual",q:"What does <code>arr[::-1]</code> return?",opts:["Reversed array","Every other element","Last element only","Raises ValueError"],a:0},
-
-  {topic:"Indexing & Slicing",type:"snippet",q:"What is the output?\n<pre>import numpy as np\na = np.array([10, 20, 30, 40, 50])\nprint(a[1:4])</pre>",opts:["[20 30 40]","[10 20 30 40]","[20 30 40 50]","[10 20 30]"],a:0},
-  {topic:"Indexing & Slicing",type:"snippet",q:"What does this print?\n<pre>import numpy as np\na = np.array([5, 10, 15, 20])\nprint(a[-2])</pre>",opts:["15","20","10","5"],a:0},
-  {topic:"Indexing & Slicing",type:"snippet",q:"What is the output?\n<pre>import numpy as np\na = np.array([1, 2, 3, 4, 5, 6])\nprint(a[a > 3])</pre>",opts:["[4 5 6]","[1 2 3]","[True False True]","[3 4 5 6]"],a:0},
-  {topic:"Indexing & Slicing",type:"snippet",q:"What is printed?\n<pre>import numpy as np\na = np.array([[1,2,3],[4,5,6]])\nprint(a[1, 2])</pre>",opts:["6","3","5","Error"],a:0},
-  {topic:"Indexing & Slicing",type:"snippet",q:"What does this code output?\n<pre>import numpy as np\na = np.arange(10)\nprint(a[2:8:3])</pre>",opts:["[2 5]","[2 5 8]","[2 4 6]","[3 6]"],a:0},
-
-  {topic:"Indexing & Slicing",type:"truefalse",q:"True or False: Basic slicing in NumPy returns a view of the original array (not a copy).",opts:["True","False","Depends on array size","Depends on dtype"],a:0},
-  {topic:"Indexing & Slicing",type:"truefalse",q:"True or False: <code>arr[arr > 0]</code> returns the count of positive elements.",opts:["False — it returns the actual positive elements","True","True only for 1D arrays","Depends on NumPy version"],a:0},
-
-  {topic:"Reshaping",type:"conceptual",q:"What does <code>arr.reshape(2, 6)</code> do to a 12-element array?",opts:["Creates a 2×6 view without changing data","Creates a copy with shape (2,6)","Raises an error if total size doesn't match","Both A and C"],a:3},
-  {topic:"Reshaping",type:"conceptual",q:"What does <code>-1</code> mean in <code>arr.reshape(3, -1)</code>?",opts:["NumPy infers that dimension automatically","Reverses the dimension","Creates an empty dimension","Sets dimension to 0"],a:0},
-  {topic:"Reshaping",type:"conceptual",q:"What does <code>arr.flatten()</code> return?",opts:["A 1D copy of the array","A 1D view of the array","The array without zero elements","A sorted 1D array"],a:0},
-  {topic:"Reshaping",type:"conceptual",q:"What does <code>arr.ravel()</code> return?",opts:["A 1D array (view if possible, copy otherwise)","Always a 1D copy","Always a 1D view","Raises error for 3D arrays"],a:0},
-  {topic:"Reshaping",type:"conceptual",q:"How do you transpose a 2D NumPy array?",opts:["arr.T","arr.transpose()","np.transpose(arr)","All of the above"],a:3},
-  {topic:"Reshaping",type:"conceptual",q:"What does <code>np.squeeze(arr)</code> do?",opts:["Removes dimensions of size 1","Compresses the array","Sorts and removes duplicates","Raises error for 2D arrays"],a:0},
-  {topic:"Reshaping",type:"conceptual",q:"What does <code>np.expand_dims(a, axis=0)</code> do to a shape-(4,) array?",opts:["Changes shape to (1, 4)","Changes shape to (4, 1)","Adds an element","Raises error"],a:0},
-
-  {topic:"Reshaping",type:"snippet",q:"What does this code print?\n<pre>import numpy as np\na = np.arange(12)\nb = a.reshape(3, 4)\nprint(b.shape)</pre>",opts:["(3, 4)","(4, 3)","(12,)","(3, 4, 1)"],a:0},
-  {topic:"Reshaping",type:"snippet",q:"What is the output?\n<pre>import numpy as np\na = np.array([[1,2],[3,4],[5,6]])\nprint(a.T.shape)</pre>",opts:["(2, 3)","(3, 2)","(6,)","Error"],a:0},
-  {topic:"Reshaping",type:"snippet",q:"What does this print?\n<pre>import numpy as np\na = np.array([[[1,2]]])\nprint(np.squeeze(a).shape)</pre>",opts:["(2,)","(1,2)","(1,1,2)","Error"],a:0},
-
-  {topic:"Reshaping",type:"truefalse",q:"True or False: <code>arr.reshape(2, 5)</code> on a 12-element array raises an error.",opts:["True — 2×5=10 ≠ 12","False — NumPy fills remaining with zeros","False — it clips the array","True — reshape always raises errors"],a:0},
-  {topic:"Reshaping",type:"truefalse",q:"True or False: <code>arr.flatten()</code> always returns a copy, while <code>arr.ravel()</code> may return a view.",opts:["True","False","Both always return copies","Both may return views"],a:0},
-
-  {topic:"Broadcasting",type:"conceptual",q:"What is NumPy broadcasting?",opts:["Automatic shape-expansion to allow operations on differently-shaped arrays","Sending data across a network","A way to print arrays","Converting arrays to lists"],a:0},
-  {topic:"Broadcasting",type:"conceptual",q:"Can you add arrays of shape (3, 1) and (1, 4)?",opts:["Yes — result is shape (3, 4)","No — incompatible shapes","Yes — result is (1, 4)","Yes — result is (3, 1)"],a:0},
-  {topic:"Broadcasting",type:"conceptual",q:"What is the result shape when adding arrays of shape (5,) and (3, 5)?",opts:["(3, 5)","(5, 5)","ValueError","(15,)"],a:0},
-  {topic:"Broadcasting",type:"conceptual",q:"What happens when you try to add shapes (3,) and (4,)?",opts:["ValueError — shapes are incompatible","Result is (3, 4)","Result is (4, 3)","Result is the larger shape (4,)"],a:0},
-
-  {topic:"Broadcasting",type:"snippet",q:"What is the output?\n<pre>import numpy as np\na = np.array([1, 2, 3])\nb = a + 10\nprint(b)</pre>",opts:["[11 12 13]","[10 20 30]","[1 2 3 10]","Error"],a:0},
+  {topic:"Data Types",type:"snippet",q:"What does this print?\n<pre>import numpy as np\na = np.array([True, False, True])\nprint(a.dtype)</pre>",opts:["int64","object","bool","int8"],a:2},
+  {topic:"Data Types",type:"truefalse",q:"True or False: Converting a float array to int using <code>astype</code> truncates (not rounds) the decimal part.",opts:["It rounds to nearest","Depends on platform","True","False"],a:2},
+  {topic:"Data Types",type:"truefalse",q:"True or False: <code>np.array([1, 2, 3.0])</code> creates an integer array.",opts:["True â€” only the last element changes","False â€” it raises a TypeError","False â€” it becomes float64 because of 3.0","True â€” integers dominate"],a:2},
+  {topic:"Indexing & Slicing",type:"conceptual",q:"What does negative indexing like <code>arr[-1]</code> return?",opts:["A reversed array","The last element","Raises IndexError","The first element"],a:1},
+  {topic:"Indexing & Slicing",type:"conceptual",q:"For a 2D array, what does <code>arr[0, :]</code> select?",opts:["The first element","The entire first row","The entire first column","A 2D sub-array"],a:1},
+  {topic:"Indexing & Slicing",type:"conceptual",q:"What is Boolean indexing?",opts:["Using negative numbers to index","Slicing with step values","Indexing with integer lists","Using a True/False array as a mask to select elements"],a:3},
+  {topic:"Indexing & Slicing",type:"conceptual",q:"What does <code>arr[1:4]</code> return for a 1D array?",opts:["Elements at indices 0, 1, 2, 3","Elements at indices 1, 2, 3, 4","Elements at indices 1, 2, 3","Element at index 1 to end"],a:2},
+  {topic:"Indexing & Slicing",type:"conceptual",q:"What does <code>arr[::2]</code> select?",opts:["Every second element starting from index 0","Elements at even positions only (same as above)","First two elements","Both A and C are correct"],a:3},
+  {topic:"Indexing & Slicing",type:"conceptual",q:"What does <code>arr[::-1]</code> return?",opts:["Every other element","Raises ValueError","Last element only","Reversed array"],a:3},
+  {topic:"Indexing & Slicing",type:"snippet",q:"What is the output?\n<pre>import numpy as np\na = np.array([10, 20, 30, 40, 50])\nprint(a[1:4])</pre>",opts:["[10 20 30]","[10 20 30 40]","[20 30 40]","[20 30 40 50]"],a:2},
+  {topic:"Indexing & Slicing",type:"snippet",q:"What does this print?\n<pre>import numpy as np\na = np.array([5, 10, 15, 20])\nprint(a[-2])</pre>",opts:["20","15","10","5"],a:1},
+  {topic:"Indexing & Slicing",type:"snippet",q:"What is the output?\n<pre>import numpy as np\na = np.array([1, 2, 3, 4, 5, 6])\nprint(a[a > 3])</pre>",opts:["[3 4 5 6]","[1 2 3]","[True False True]","[4 5 6]"],a:3},
+  {topic:"Indexing & Slicing",type:"snippet",q:"What is printed?\n<pre>import numpy as np\na = np.array([[1,2,3],[4,5,6]])\nprint(a[1, 2])</pre>",opts:["Error","6","3","5"],a:1},
+  {topic:"Indexing & Slicing",type:"snippet",q:"What does this code output?\n<pre>import numpy as np\na = np.arange(10)\nprint(a[2:8:3])</pre>",opts:["[2 5 8]","[2 5]","[2 4 6]","[3 6]"],a:1},
+  {topic:"Indexing & Slicing",type:"truefalse",q:"True or False: Basic slicing in NumPy returns a view of the original array (not a copy).",opts:["Depends on array size","Depends on dtype","True","False"],a:2},
+  {topic:"Indexing & Slicing",type:"truefalse",q:"True or False: <code>arr[arr > 0]</code> returns the count of positive elements.",opts:["Depends on NumPy version","False â€” it returns the actual positive elements","True","True only for 1D arrays"],a:1},
+  {topic:"Reshaping",type:"conceptual",q:"What does <code>arr.reshape(2, 6)</code> do to a 12-element array?",opts:["Creates a 2Ã—6 view without changing data","Both A and C","Creates a copy with shape (2,6)","Raises an error if total size doesn't match"],a:1},
+  {topic:"Reshaping",type:"conceptual",q:"What does <code>-1</code> mean in <code>arr.reshape(3, -1)</code>?",opts:["NumPy infers that dimension automatically","Sets dimension to 0","Creates an empty dimension","Reverses the dimension"],a:0},
+  {topic:"Reshaping",type:"conceptual",q:"What does <code>arr.flatten()</code> return?",opts:["A 1D view of the array","A 1D copy of the array","A sorted 1D array","The array without zero elements"],a:1},
+  {topic:"Reshaping",type:"conceptual",q:"What does <code>arr.ravel()</code> return?",opts:["Raises error for 3D arrays","Always a 1D view","A 1D array (view if possible, copy otherwise)","Always a 1D copy"],a:2},
+  {topic:"Reshaping",type:"conceptual",q:"How do you transpose a 2D NumPy array?",opts:["np.transpose(arr)","All of the above","arr.T","arr.transpose()"],a:1},
+  {topic:"Reshaping",type:"conceptual",q:"What does <code>np.squeeze(arr)</code> do?",opts:["Removes dimensions of size 1","Raises error for 2D arrays","Compresses the array","Sorts and removes duplicates"],a:0},
+  {topic:"Reshaping",type:"conceptual",q:"What does <code>np.expand_dims(a, axis=0)</code> do to a shape-(4,) array?",opts:["Adds an element","Changes shape to (4, 1)","Raises error","Changes shape to (1, 4)"],a:3},
+  {topic:"Reshaping",type:"snippet",q:"What does this code print?\n<pre>import numpy as np\na = np.arange(12)\nb = a.reshape(3, 4)\nprint(b.shape)</pre>",opts:["(3, 4, 1)","(3, 4)","(12,)","(4, 3)"],a:1},
+  {topic:"Reshaping",type:"snippet",q:"What is the output?\n<pre>import numpy as np\na = np.array([[1,2],[3,4],[5,6]])\nprint(a.T.shape)</pre>",opts:["(6,)","Error","(3, 2)","(2, 3)"],a:3},
+  {topic:"Reshaping",type:"snippet",q:"What does this print?\n<pre>import numpy as np\na = np.array([[[1,2]]])\nprint(np.squeeze(a).shape)</pre>",opts:["(1,1,2)","(2,)","Error","(1,2)"],a:1},
+  {topic:"Reshaping",type:"truefalse",q:"True or False: <code>arr.reshape(2, 5)</code> on a 12-element array raises an error.",opts:["True â€” 2Ã—5=10 â‰  12","True â€” reshape always raises errors","False â€” it clips the array","False â€” NumPy fills remaining with zeros"],a:0},
+  {topic:"Reshaping",type:"truefalse",q:"True or False: <code>arr.flatten()</code> always returns a copy, while <code>arr.ravel()</code> may return a view.",opts:["False","True","Both may return views","Both always return copies"],a:1},
+  {topic:"Broadcasting",type:"conceptual",q:"What is NumPy broadcasting?",opts:["Sending data across a network","Automatic shape-expansion to allow operations on differently-shaped arrays","Converting arrays to lists","A way to print arrays"],a:1},
+  {topic:"Broadcasting",type:"conceptual",q:"Can you add arrays of shape (3, 1) and (1, 4)?",opts:["Yes â€” result is shape (3, 4)","Yes â€” result is (1, 4)","Yes â€” result is (3, 1)","No â€” incompatible shapes"],a:0},
+  {topic:"Broadcasting",type:"conceptual",q:"What is the result shape when adding arrays of shape (5,) and (3, 5)?",opts:["(15,)","(5, 5)","ValueError","(3, 5)"],a:3},
+  {topic:"Broadcasting",type:"conceptual",q:"What happens when you try to add shapes (3,) and (4,)?",opts:["Result is the larger shape (4,)","Result is (4, 3)","Result is (3, 4)","ValueError â€” shapes are incompatible"],a:3},
+  {topic:"Broadcasting",type:"snippet",q:"What is the output?\n<pre>import numpy as np\na = np.array([1, 2, 3])\nb = a + 10\nprint(b)</pre>",opts:["Error","[1 2 3 10]","[10 20 30]","[11 12 13]"],a:3},
   {topic:"Broadcasting",type:"snippet",q:"What does this print?\n<pre>import numpy as np\na = np.array([[1],[2],[3]])\nb = np.array([10, 20, 30])\nprint((a + b).shape)</pre>",opts:["(3, 3)","(3,)","(1, 3)","Error"],a:0},
-
-  {topic:"Broadcasting",type:"truefalse",q:"True or False: Adding a scalar to a NumPy array uses broadcasting to apply the scalar to every element.",opts:["True","False","Only for 1D arrays","Only for integer dtypes"],a:0},
-  {topic:"Broadcasting",type:"truefalse",q:"True or False: Broadcasting always creates a copy of the data.",opts:["False — it is a logical expansion; no copy is always made","True","True for large arrays only","Depends on dtype"],a:0},
-
-  {topic:"Math Operations",type:"conceptual",q:"Which function computes element-wise square root?",opts:["np.sqrt()","np.root()","np.squareroot()","np.pow(0.5)"],a:0},
-  {topic:"Math Operations",type:"conceptual",q:"What does <code>np.dot(a, b)</code> compute for 1D arrays?",opts:["Inner (dot) product","Cross product","Element-wise product","Outer product"],a:0},
-  {topic:"Math Operations",type:"conceptual",q:"What does the <code>@</code> operator do in NumPy?",opts:["Matrix multiplication","Element-wise multiplication","Bitwise AND","Exponentiation"],a:0},
-  {topic:"Math Operations",type:"conceptual",q:"What does <code>np.cumsum(arr)</code> return?",opts:["Running cumulative sum","Total sum as scalar","Sorted cumulative values","Product of elements"],a:0},
-  {topic:"Math Operations",type:"conceptual",q:"What does <code>np.abs(arr)</code> compute?",opts:["Element-wise absolute value","Mean of absolute values","Sum of absolute values","Max absolute value"],a:0},
-  {topic:"Math Operations",type:"conceptual",q:"What does <code>np.clip(arr, 2, 8)</code> do?",opts:["Clamps all values to the range [2, 8]","Removes values outside [2, 8]","Scales values to fit [2, 8]","Rounds to 2 decimal places"],a:0},
-  {topic:"Math Operations",type:"conceptual",q:"What does <code>np.log(np.e)</code> return?",opts:["1.0","2.718","0.0","0.434"],a:0},
-
-  {topic:"Math Operations",type:"snippet",q:"What is the output?\n<pre>import numpy as np\na = np.array([4, 9, 16])\nprint(np.sqrt(a))</pre>",opts:["[2. 3. 4.]","[2 3 4]","[16 81 256]","Error"],a:0},
-  {topic:"Math Operations",type:"snippet",q:"What does this print?\n<pre>import numpy as np\na = np.array([1, 2, 3, 4])\nprint(np.cumsum(a))</pre>",opts:["[ 1  3  6 10]","[1 2 3 4]","[0 1 3 6]","10"],a:0},
-  {topic:"Math Operations",type:"snippet",q:"What is the output?\n<pre>import numpy as np\na = np.array([-3, 0, 5])\nprint(np.clip(a, -1, 4))</pre>",opts:["[-1  0  4]","[-3  0  5]","[0  0  4]","Error"],a:0},
-  {topic:"Math Operations",type:"snippet",q:"What does this print?\n<pre>import numpy as np\na = np.array([1, 2, 3])\nb = np.array([4, 5, 6])\nprint(np.dot(a, b))</pre>",opts:["32","[4 10 18]","15","Error"],a:0},
-  {topic:"Math Operations",type:"snippet",q:"What is the result?\n<pre>import numpy as np\nprint(np.floor_divide(17, 5))</pre>",opts:["3","3.4","4","2"],a:0},
-
-  {topic:"Math Operations",type:"truefalse",q:"True or False: <code>np.multiply(a, b)</code> performs element-wise multiplication.",opts:["True","False — it does matrix multiplication","False — it does dot product","True only for 1D arrays"],a:0},
-  {topic:"Math Operations",type:"truefalse",q:"True or False: <code>a ** 2</code> and <code>np.power(a, 2)</code> produce the same result for a NumPy array.",opts:["True","False","Only for float arrays","Only for 2D arrays"],a:0},
-
-  {topic:"Statistics",type:"conceptual",q:"Which function computes the arithmetic mean of a NumPy array?",opts:["np.mean()","np.average()","Both A and B (with slight differences)","np.median()"],a:2},
+  {topic:"Broadcasting",type:"truefalse",q:"True or False: Adding a scalar to a NumPy array uses broadcasting to apply the scalar to every element.",opts:["Only for 1D arrays","Only for integer dtypes","False","True"],a:3},
+  {topic:"Broadcasting",type:"truefalse",q:"True or False: Broadcasting always creates a copy of the data.",opts:["True","Depends on dtype","False â€” it is a logical expansion; no copy is always made","True for large arrays only"],a:2},
+  {topic:"Math Operations",type:"conceptual",q:"Which function computes element-wise square root?",opts:["np.root()","np.squareroot()","np.pow(0.5)","np.sqrt()"],a:3},
+  {topic:"Math Operations",type:"conceptual",q:"What does <code>np.dot(a, b)</code> compute for 1D arrays?",opts:["Outer product","Element-wise product","Cross product","Inner (dot) product"],a:3},
+  {topic:"Math Operations",type:"conceptual",q:"What does the <code>@</code> operator do in NumPy?",opts:["Bitwise AND","Exponentiation","Element-wise multiplication","Matrix multiplication"],a:3},
+  {topic:"Math Operations",type:"conceptual",q:"What does <code>np.cumsum(arr)</code> return?",opts:["Running cumulative sum","Total sum as scalar","Product of elements","Sorted cumulative values"],a:0},
+  {topic:"Math Operations",type:"conceptual",q:"What does <code>np.abs(arr)</code> compute?",opts:["Max absolute value","Element-wise absolute value","Mean of absolute values","Sum of absolute values"],a:1},
+  {topic:"Math Operations",type:"conceptual",q:"What does <code>np.clip(arr, 2, 8)</code> do?",opts:["Clamps all values to the range [2, 8]","Removes values outside [2, 8]","Rounds to 2 decimal places","Scales values to fit [2, 8]"],a:0},
+  {topic:"Math Operations",type:"conceptual",q:"What does <code>np.log(np.e)</code> return?",opts:["2.718","0.434","0.0","1.0"],a:3},
+  {topic:"Math Operations",type:"snippet",q:"What is the output?\n<pre>import numpy as np\na = np.array([4, 9, 16])\nprint(np.sqrt(a))</pre>",opts:["[2. 3. 4.]","[16 81 256]","[2 3 4]","Error"],a:0},
+  {topic:"Math Operations",type:"snippet",q:"What does this print?\n<pre>import numpy as np\na = np.array([1, 2, 3, 4])\nprint(np.cumsum(a))</pre>",opts:["10","[ 1  3  6 10]","[1 2 3 4]","[0 1 3 6]"],a:1},
+  {topic:"Math Operations",type:"snippet",q:"What is the output?\n<pre>import numpy as np\na = np.array([-3, 0, 5])\nprint(np.clip(a, -1, 4))</pre>",opts:["[-3  0  5]","Error","[0  0  4]","[-1  0  4]"],a:3},
+  {topic:"Math Operations",type:"snippet",q:"What does this print?\n<pre>import numpy as np\na = np.array([1, 2, 3])\nb = np.array([4, 5, 6])\nprint(np.dot(a, b))</pre>",opts:["[4 10 18]","15","32","Error"],a:2},
+  {topic:"Math Operations",type:"snippet",q:"What is the result?\n<pre>import numpy as np\nprint(np.floor_divide(17, 5))</pre>",opts:["3.4","3","2","4"],a:1},
+  {topic:"Math Operations",type:"truefalse",q:"True or False: <code>np.multiply(a, b)</code> performs element-wise multiplication.",opts:["False â€” it does dot product","True","False â€” it does matrix multiplication","True only for 1D arrays"],a:1},
+  {topic:"Math Operations",type:"truefalse",q:"True or False: <code>a ** 2</code> and <code>np.power(a, 2)</code> produce the same result for a NumPy array.",opts:["Only for float arrays","True","False","Only for 2D arrays"],a:1},
+  {topic:"Statistics",type:"conceptual",q:"Which function computes the arithmetic mean of a NumPy array?",opts:["Both A and B (with slight differences)","np.mean()","np.average()","np.median()"],a:0},
   {topic:"Statistics",type:"conceptual",q:"Which function returns the index of the maximum element?",opts:["np.argmax()","np.max()","np.where()","np.idxmax()"],a:0},
-  {topic:"Statistics",type:"conceptual",q:"What does <code>np.std(arr)</code> compute?",opts:["Standard deviation (population by default)","Variance","Mean deviation","Median absolute deviation"],a:0},
-  {topic:"Statistics",type:"conceptual",q:"Which function computes the median?",opts:["np.median()","np.mean()","np.mid()","np.central()"],a:0},
-  {topic:"Statistics",type:"conceptual",q:"What does <code>np.percentile(arr, 25)</code> return?",opts:["The 25th percentile (Q1)","The value at index 25","25% of the maximum","The count below 25"],a:0},
-  {topic:"Statistics",type:"conceptual",q:"What does <code>np.nanmean(arr)</code> do differently than <code>np.mean(arr)</code>?",opts:["nanmean ignores NaN values; mean propagates NaN as result","mean ignores NaN; nanmean propagates NaN","They behave identically","nanmean is faster"],a:0},
-
-  {topic:"Statistics",type:"snippet",q:"What is the output?\n<pre>import numpy as np\na = np.array([2, 4, 4, 4, 5, 5, 7, 9])\nprint(np.mean(a))</pre>",opts:["5.0","4.5","5.5","4.0"],a:0},
-  {topic:"Statistics",type:"snippet",q:"What does this print?\n<pre>import numpy as np\na = np.array([10, 20, 30, 40, 50])\nprint(np.argmax(a))</pre>",opts:["4","50","0","3"],a:0},
-  {topic:"Statistics",type:"snippet",q:"What is the output?\n<pre>import numpy as np\na = np.array([1, 2, np.nan, 4])\nprint(np.nanmean(a))</pre>",opts:["2.333...","nan","1.75","Error"],a:0},
-  {topic:"Statistics",type:"snippet",q:"What does this print?\n<pre>import numpy as np\na = np.array([3, 1, 4, 1, 5, 9, 2, 6])\nprint(np.median(a))</pre>",opts:["3.5","4.0","3.0","4.5"],a:0},
-
-  {topic:"Statistics",type:"truefalse",q:"True or False: <code>np.var(arr)</code> computes the population variance by default (divides by N).",opts:["True","False — it divides by N-1","False — it divides by N+1","True only for float arrays"],a:0},
-  {topic:"Statistics",type:"truefalse",q:"True or False: <code>np.mean(arr, axis=0)</code> on a 2D array returns column-wise means.",opts:["True","False — it returns row-wise means","False — it returns the grand mean","True only for square matrices"],a:0},
-
-  {topic:"Sorting & Searching",type:"conceptual",q:"Which function returns a sorted copy of a NumPy array without modifying the original?",opts:["np.sort()","arr.sort()","Both A and B","np.sorted()"],a:0},
-  {topic:"Sorting & Searching",type:"conceptual",q:"What does <code>np.argsort(arr)</code> return?",opts:["Indices that would sort the array","Sorted values","Rank of each element","Reversed indices"],a:0},
-  {topic:"Sorting & Searching",type:"conceptual",q:"What does <code>np.unique(arr)</code> return?",opts:["Sorted unique elements","Unsorted unique elements","First occurrence of each element","Unique count"],a:0},
-  {topic:"Sorting & Searching",type:"conceptual",q:"What does <code>np.where(condition)</code> return when used with only one argument?",opts:["Tuple of arrays of indices where condition is True","Boolean mask","Filtered array","Count of True values"],a:0},
-
-  {topic:"Sorting & Searching",type:"snippet",q:"What is the output?\n<pre>import numpy as np\na = np.array([3, 1, 4, 1, 5])\nprint(np.sort(a))</pre>",opts:["[1 1 3 4 5]","[3 1 4 1 5]","[5 4 3 1 1]","[1 3 4 5]"],a:0},
-  {topic:"Sorting & Searching",type:"snippet",q:"What does this print?\n<pre>import numpy as np\na = np.array([30, 10, 20])\nprint(np.argsort(a))</pre>",opts:["[1 2 0]","[0 1 2]","[10 20 30]","[2 0 1]"],a:0},
-  {topic:"Sorting & Searching",type:"snippet",q:"What is the output?\n<pre>import numpy as np\na = np.array([1, 2, 2, 3, 3, 3])\nprint(np.unique(a))</pre>",opts:["[1 2 3]","[1 2 2 3 3 3]","[3 2 1]","[1 2 3 3]"],a:0},
-  {topic:"Sorting & Searching",type:"snippet",q:"What does this print?\n<pre>import numpy as np\na = np.array([5, 0, 3, 8, 2])\nprint(np.where(a > 3))</pre>",opts:["(array([0, 3]),)","[5 8]","[0 3]","(array([5, 8]),)"],a:0},
-
-  {topic:"Sorting & Searching",type:"truefalse",q:"True or False: <code>arr.sort()</code> modifies the array in-place and returns None.",opts:["True","False — it returns the sorted array","False — it returns a copy","True only for 1D arrays"],a:0},
-  {topic:"Sorting & Searching",type:"truefalse",q:"True or False: <code>np.sort(arr)</code> modifies the original array.",opts:["False — it returns a new sorted array","True","True only for 2D arrays","Depends on the kind parameter"],a:0},
-
-  {topic:"Concatenation & Splitting",type:"conceptual",q:"Which function concatenates arrays along an existing axis?",opts:["np.concatenate()","np.stack()","np.join()","np.combine()"],a:0},
-  {topic:"Concatenation & Splitting",type:"conceptual",q:"What does <code>np.vstack([a, b])</code> do?",opts:["Stacks arrays vertically (row-wise, axis 0)","Stacks arrays horizontally (col-wise, axis 1)","Stacks along a new third axis","Raises error for 1D arrays"],a:0},
+  {topic:"Statistics",type:"conceptual",q:"What does <code>np.std(arr)</code> compute?",opts:["Variance","Standard deviation (population by default)","Median absolute deviation","Mean deviation"],a:1},
+  {topic:"Statistics",type:"conceptual",q:"Which function computes the median?",opts:["np.median()","np.mid()","np.mean()","np.central()"],a:0},
+  {topic:"Statistics",type:"conceptual",q:"What does <code>np.percentile(arr, 25)</code> return?",opts:["The value at index 25","25% of the maximum","The 25th percentile (Q1)","The count below 25"],a:2},
+  {topic:"Statistics",type:"conceptual",q:"What does <code>np.nanmean(arr)</code> do differently than <code>np.mean(arr)</code>?",opts:["mean ignores NaN; nanmean propagates NaN","They behave identically","nanmean is faster","nanmean ignores NaN values; mean propagates NaN as result"],a:3},
+  {topic:"Statistics",type:"snippet",q:"What is the output?\n<pre>import numpy as np\na = np.array([2, 4, 4, 4, 5, 5, 7, 9])\nprint(np.mean(a))</pre>",opts:["4.5","5.0","4.0","5.5"],a:1},
+  {topic:"Statistics",type:"snippet",q:"What does this print?\n<pre>import numpy as np\na = np.array([10, 20, 30, 40, 50])\nprint(np.argmax(a))</pre>",opts:["50","4","3","0"],a:1},
+  {topic:"Statistics",type:"snippet",q:"What is the output?\n<pre>import numpy as np\na = np.array([1, 2, np.nan, 4])\nprint(np.nanmean(a))</pre>",opts:["1.75","Error","nan","2.333..."],a:3},
+  {topic:"Statistics",type:"snippet",q:"What does this print?\n<pre>import numpy as np\na = np.array([3, 1, 4, 1, 5, 9, 2, 6])\nprint(np.median(a))</pre>",opts:["4.0","3.5","4.5","3.0"],a:1},
+  {topic:"Statistics",type:"truefalse",q:"True or False: <code>np.var(arr)</code> computes the population variance by default (divides by N).",opts:["False â€” it divides by N-1","True only for float arrays","True","False â€” it divides by N+1"],a:2},
+  {topic:"Statistics",type:"truefalse",q:"True or False: <code>np.mean(arr, axis=0)</code> on a 2D array returns column-wise means.",opts:["True only for square matrices","True","False â€” it returns row-wise means","False â€” it returns the grand mean"],a:1},
+  {topic:"Sorting & Searching",type:"conceptual",q:"Which function returns a sorted copy of a NumPy array without modifying the original?",opts:["arr.sort()","np.sort()","Both A and B","np.sorted()"],a:1},
+  {topic:"Sorting & Searching",type:"conceptual",q:"What does <code>np.argsort(arr)</code> return?",opts:["Reversed indices","Rank of each element","Sorted values","Indices that would sort the array"],a:3},
+  {topic:"Sorting & Searching",type:"conceptual",q:"What does <code>np.unique(arr)</code> return?",opts:["Sorted unique elements","First occurrence of each element","Unique count","Unsorted unique elements"],a:0},
+  {topic:"Sorting & Searching",type:"conceptual",q:"What does <code>np.where(condition)</code> return when used with only one argument?",opts:["Tuple of arrays of indices where condition is True","Count of True values","Boolean mask","Filtered array"],a:0},
+  {topic:"Sorting & Searching",type:"snippet",q:"What is the output?\n<pre>import numpy as np\na = np.array([3, 1, 4, 1, 5])\nprint(np.sort(a))</pre>",opts:["[5 4 3 1 1]","[1 3 4 5]","[3 1 4 1 5]","[1 1 3 4 5]"],a:3},
+  {topic:"Sorting & Searching",type:"snippet",q:"What does this print?\n<pre>import numpy as np\na = np.array([30, 10, 20])\nprint(np.argsort(a))</pre>",opts:["[10 20 30]","[0 1 2]","[1 2 0]","[2 0 1]"],a:2},
+  {topic:"Sorting & Searching",type:"snippet",q:"What is the output?\n<pre>import numpy as np\na = np.array([1, 2, 2, 3, 3, 3])\nprint(np.unique(a))</pre>",opts:["[1 2 3]","[1 2 3 3]","[1 2 2 3 3 3]","[3 2 1]"],a:0},
+  {topic:"Sorting & Searching",type:"snippet",q:"What does this print?\n<pre>import numpy as np\na = np.array([5, 0, 3, 8, 2])\nprint(np.where(a > 3))</pre>",opts:["[0 3]","(array([5, 8]),)","(array([0, 3]),)","[5 8]"],a:2},
+  {topic:"Sorting & Searching",type:"truefalse",q:"True or False: <code>arr.sort()</code> modifies the array in-place and returns None.",opts:["True","False â€” it returns a copy","True only for 1D arrays","False â€” it returns the sorted array"],a:0},
+  {topic:"Sorting & Searching",type:"truefalse",q:"True or False: <code>np.sort(arr)</code> modifies the original array.",opts:["True","True only for 2D arrays","Depends on the kind parameter","False â€” it returns a new sorted array"],a:3},
+  {topic:"Concatenation & Splitting",type:"conceptual",q:"Which function concatenates arrays along an existing axis?",opts:["np.combine()","np.concatenate()","np.stack()","np.join()"],a:1},
+  {topic:"Concatenation & Splitting",type:"conceptual",q:"What does <code>np.vstack([a, b])</code> do?",opts:["Stacks along a new third axis","Stacks arrays horizontally (col-wise, axis 1)","Raises error for 1D arrays","Stacks arrays vertically (row-wise, axis 0)"],a:3},
   {topic:"Concatenation & Splitting",type:"conceptual",q:"What does <code>np.hstack([a, b])</code> do for 2D arrays?",opts:["Stacks horizontally (column-wise, axis 1)","Stacks vertically (row-wise, axis 0)","Stacks along axis 2","Creates a new axis"],a:0},
-  {topic:"Concatenation & Splitting",type:"conceptual",q:"What does <code>np.split(arr, 3)</code> do?",opts:["Splits arr into 3 equal-sized parts","Splits at index 3","Splits into parts of size 3","Raises error for odd-length arrays"],a:0},
-
-  {topic:"Concatenation & Splitting",type:"snippet",q:"What is the output?\n<pre>import numpy as np\na = np.array([1, 2, 3])\nb = np.array([4, 5, 6])\nprint(np.concatenate([a, b]))</pre>",opts:["[1 2 3 4 5 6]","[[1 2 3][4 5 6]]","[5 7 9]","Error"],a:0},
-  {topic:"Concatenation & Splitting",type:"snippet",q:"What does this print?\n<pre>import numpy as np\na = np.array([[1,2],[3,4]])\nb = np.array([[5,6]])\nprint(np.vstack([a, b]).shape)</pre>",opts:["(3, 2)","(2, 3)","(2, 4)","Error"],a:0},
-
-  {topic:"Concatenation & Splitting",type:"truefalse",q:"True or False: <code>np.stack([a, b])</code> stacks arrays along a new axis, increasing the number of dimensions.",opts:["True","False — it stacks along an existing axis","False — it is the same as concatenate","True only for 1D arrays"],a:0},
-
-  {topic:"Copy & Views",type:"conceptual",q:"Does basic slicing in NumPy return a view or a copy?",opts:["A view of the original array","Always a copy","A copy for 2D arrays, view for 1D","Depends on dtype"],a:0},
-  {topic:"Copy & Views",type:"conceptual",q:"Which method creates a deep copy of a NumPy array?",opts:["arr.copy()","arr.view()","np.deepcopy(arr)","arr.clone()"],a:0},
-  {topic:"Copy & Views",type:"snippet",q:"What does this code print?\n<pre>import numpy as np\na = np.array([1, 2, 3, 4])\nb = a[1:3]\nb[0] = 99\nprint(a)</pre>",opts:["[ 1 99  3  4]","[1 2 3 4]","[99  2  3  4]","Error"],a:0},
-  {topic:"Copy & Views",type:"snippet",q:"What is the output?\n<pre>import numpy as np\na = np.array([1, 2, 3])\nb = a.copy()\nb[0] = 99\nprint(a[0])</pre>",opts:["1","99","0","Error"],a:0},
-  {topic:"Copy & Views",type:"truefalse",q:"True or False: If you modify a view of a NumPy array, the original array is also modified.",opts:["True","False","Only for integer arrays","Depends on the operation"],a:0},
-
-  {topic:"Random",type:"conceptual",q:"How do you set a random seed for reproducibility in NumPy?",opts:["np.random.seed(42)","np.seed(42)","np.random.set_seed(42)","np.random.init(42)"],a:0},
-  {topic:"Random",type:"conceptual",q:"Which function generates a random float uniformly in [0.0, 1.0)?",opts:["np.random.random()","np.random.rand()","np.random.uniform()","All of the above"],a:3},
-  {topic:"Random",type:"conceptual",q:"What does <code>np.random.randint(0, 10, size=5)</code> return?",opts:["5 random integers from 0 to 9","5 random integers from 0 to 10","5 random floats","A sorted array of 5 integers"],a:0},
-  {topic:"Random",type:"conceptual",q:"Which function draws from a normal (Gaussian) distribution?",opts:["np.random.randn()","np.random.normal()","Both A and B (with different argument styles)","np.random.gaussian()"],a:2},
-  {topic:"Random",type:"snippet",q:"What does this code guarantee?\n<pre>import numpy as np\nnp.random.seed(0)\na = np.random.rand(3)\nnp.random.seed(0)\nb = np.random.rand(3)\nprint(np.array_equal(a, b))</pre>",opts:["True","False","Error","None"],a:0},
-  {topic:"Random",type:"snippet",q:"What is the shape of the output?\n<pre>import numpy as np\na = np.random.randint(1, 100, size=(3, 4))\nprint(a.shape)</pre>",opts:["(3, 4)","(4, 3)","(12,)","(3,)"],a:0},
-  {topic:"Random",type:"truefalse",q:"True or False: <code>np.random.shuffle(arr)</code> returns a shuffled copy of the array.",opts:["False — it shuffles in-place and returns None","True","True only for 1D arrays","Depends on array size"],a:0},
-
-  {topic:"Linear Algebra",type:"conceptual",q:"Which module contains NumPy's linear algebra functions?",opts:["np.linalg","np.algebra","np.matrix","np.linear"],a:0},
-  {topic:"Linear Algebra",type:"conceptual",q:"Which function computes the determinant of a matrix?",opts:["np.linalg.det()","np.det()","np.linalg.determinant()","np.matrix.det()"],a:0},
-  {topic:"Linear Algebra",type:"conceptual",q:"What does <code>np.linalg.inv(A)</code> compute?",opts:["Matrix inverse of A","Inverse of the determinant","Transpose of A","Pseudo-inverse of A"],a:0},
-  {topic:"Linear Algebra",type:"conceptual",q:"What does <code>np.trace(A)</code> compute?",opts:["Sum of diagonal elements","Product of diagonal elements","Sum of all elements","Rank of A"],a:0},
-  {topic:"Linear Algebra",type:"snippet",q:"What is the output?\n<pre>import numpy as np\nA = np.array([[1,2],[3,4]])\nprint(np.trace(A))</pre>",opts:["5","10","7","3"],a:0},
-  {topic:"Linear Algebra",type:"snippet",q:"What does this print?\n<pre>import numpy as np\nA = np.array([[2,0],[0,3]])\nprint(np.linalg.det(A))</pre>",opts:["6.0","5.0","0.0","Error"],a:0},
-  {topic:"Linear Algebra",type:"truefalse",q:"True or False: <code>np.linalg.inv(A)</code> requires A to be a square matrix.",opts:["True","False","Only for float matrices","Only if A is symmetric"],a:0},
-
-  {topic:"File I/O",type:"conceptual",q:"Which function saves a single NumPy array to a binary <code>.npy</code> file?",opts:["np.save()","np.savez()","np.dump()","np.tofile()"],a:0},
-  {topic:"File I/O",type:"conceptual",q:"Which function loads a <code>.npy</code> or <code>.npz</code> file?",opts:["np.load()","np.read()","np.import_array()","np.fromfile()"],a:0},
-  {topic:"File I/O",type:"conceptual",q:"Which function saves an array as a human-readable text file?",opts:["np.savetxt()","np.save_text()","np.write()","np.totext()"],a:0},
-  {topic:"File I/O",type:"conceptual",q:"How do you save multiple arrays to a single compressed file?",opts:["np.savez_compressed('file.npz', a=a, b=b)","np.save_multiple()","np.save('file', [a,b])","np.dump_all()"],a:0},
-  {topic:"File I/O",type:"truefalse",q:"True or False: <code>np.loadtxt()</code> can load CSV files by specifying a delimiter.",opts:["True","False","Only for integer data","Only for 1D data"],a:0},
-
-  {topic:"Boolean Ops",type:"conceptual",q:"Which function returns True if ALL elements in an array are True?",opts:["np.all()","np.any()","np.every()","np.check()"],a:0},
-  {topic:"Boolean Ops",type:"conceptual",q:"Which function returns True if ANY element in an array is True?",opts:["np.any()","np.all()","np.some()","np.exists()"],a:0},
-  {topic:"Boolean Ops",type:"conceptual",q:"What does <code>np.isnan(arr)</code> return?",opts:["Boolean array: True where values are NaN","Count of NaN elements","Array with NaN replaced by 0","Indices of NaN elements"],a:0},
+  {topic:"Concatenation & Splitting",type:"conceptual",q:"What does <code>np.split(arr, 3)</code> do?",opts:["Splits into parts of size 3","Splits arr into 3 equal-sized parts","Raises error for odd-length arrays","Splits at index 3"],a:1},
+  {topic:"Concatenation & Splitting",type:"snippet",q:"What is the output?\n<pre>import numpy as np\na = np.array([1, 2, 3])\nb = np.array([4, 5, 6])\nprint(np.concatenate([a, b]))</pre>",opts:["Error","[[1 2 3][4 5 6]]","[1 2 3 4 5 6]","[5 7 9]"],a:2},
+  {topic:"Concatenation & Splitting",type:"snippet",q:"What does this print?\n<pre>import numpy as np\na = np.array([[1,2],[3,4]])\nb = np.array([[5,6]])\nprint(np.vstack([a, b]).shape)</pre>",opts:["Error","(2, 3)","(2, 4)","(3, 2)"],a:3},
+  {topic:"Concatenation & Splitting",type:"truefalse",q:"True or False: <code>np.stack([a, b])</code> stacks arrays along a new axis, increasing the number of dimensions.",opts:["True only for 1D arrays","False â€” it stacks along an existing axis","True","False â€” it is the same as concatenate"],a:2},
+  {topic:"Copy & Views",type:"conceptual",q:"Does basic slicing in NumPy return a view or a copy?",opts:["A view of the original array","Depends on dtype","A copy for 2D arrays, view for 1D","Always a copy"],a:0},
+  {topic:"Copy & Views",type:"conceptual",q:"Which method creates a deep copy of a NumPy array?",opts:["arr.view()","arr.clone()","np.deepcopy(arr)","arr.copy()"],a:3},
+  {topic:"Copy & Views",type:"snippet",q:"What does this code print?\n<pre>import numpy as np\na = np.array([1, 2, 3, 4])\nb = a[1:3]\nb[0] = 99\nprint(a)</pre>",opts:["[99  2  3  4]","[1 2 3 4]","[ 1 99  3  4]","Error"],a:2},
+  {topic:"Copy & Views",type:"snippet",q:"What is the output?\n<pre>import numpy as np\na = np.array([1, 2, 3])\nb = a.copy()\nb[0] = 99\nprint(a[0])</pre>",opts:["99","1","0","Error"],a:1},
+  {topic:"Copy & Views",type:"truefalse",q:"True or False: If you modify a view of a NumPy array, the original array is also modified.",opts:["Depends on the operation","True","Only for integer arrays","False"],a:1},
+  {topic:"Random",type:"conceptual",q:"How do you set a random seed for reproducibility in NumPy?",opts:["np.random.seed(42)","np.seed(42)","np.random.init(42)","np.random.set_seed(42)"],a:0},
+  {topic:"Random",type:"conceptual",q:"Which function generates a random float uniformly in [0.0, 1.0)?",opts:["All of the above","np.random.uniform()","np.random.random()","np.random.rand()"],a:0},
+  {topic:"Random",type:"conceptual",q:"What does <code>np.random.randint(0, 10, size=5)</code> return?",opts:["5 random integers from 0 to 9","A sorted array of 5 integers","5 random integers from 0 to 10","5 random floats"],a:0},
+  {topic:"Random",type:"conceptual",q:"Which function draws from a normal (Gaussian) distribution?",opts:["np.random.normal()","np.random.randn()","np.random.gaussian()","Both A and B (with different argument styles)"],a:3},
+  {topic:"Random",type:"snippet",q:"What does this code guarantee?\n<pre>import numpy as np\nnp.random.seed(0)\na = np.random.rand(3)\nnp.random.seed(0)\nb = np.random.rand(3)\nprint(np.array_equal(a, b))</pre>",opts:["False","Error","True","None"],a:2},
+  {topic:"Random",type:"snippet",q:"What is the shape of the output?\n<pre>import numpy as np\na = np.random.randint(1, 100, size=(3, 4))\nprint(a.shape)</pre>",opts:["(12,)","(3,)","(3, 4)","(4, 3)"],a:2},
+  {topic:"Random",type:"truefalse",q:"True or False: <code>np.random.shuffle(arr)</code> returns a shuffled copy of the array.",opts:["True","False â€” it shuffles in-place and returns None","Depends on array size","True only for 1D arrays"],a:1},
+  {topic:"Linear Algebra",type:"conceptual",q:"Which module contains NumPy's linear algebra functions?",opts:["np.matrix","np.linear","np.algebra","np.linalg"],a:3},
+  {topic:"Linear Algebra",type:"conceptual",q:"Which function computes the determinant of a matrix?",opts:["np.linalg.determinant()","np.matrix.det()","np.linalg.det()","np.det()"],a:2},
+  {topic:"Linear Algebra",type:"conceptual",q:"What does <code>np.linalg.inv(A)</code> compute?",opts:["Pseudo-inverse of A","Inverse of the determinant","Transpose of A","Matrix inverse of A"],a:3},
+  {topic:"Linear Algebra",type:"conceptual",q:"What does <code>np.trace(A)</code> compute?",opts:["Rank of A","Sum of diagonal elements","Sum of all elements","Product of diagonal elements"],a:1},
+  {topic:"Linear Algebra",type:"snippet",q:"What is the output?\n<pre>import numpy as np\nA = np.array([[1,2],[3,4]])\nprint(np.trace(A))</pre>",opts:["3","7","5","10"],a:2},
+  {topic:"Linear Algebra",type:"snippet",q:"What does this print?\n<pre>import numpy as np\nA = np.array([[2,0],[0,3]])\nprint(np.linalg.det(A))</pre>",opts:["6.0","0.0","5.0","Error"],a:0},
+  {topic:"Linear Algebra",type:"truefalse",q:"True or False: <code>np.linalg.inv(A)</code> requires A to be a square matrix.",opts:["Only for float matrices","Only if A is symmetric","True","False"],a:2},
+  {topic:"File I/O",type:"conceptual",q:"Which function saves a single NumPy array to a binary <code>.npy</code> file?",opts:["np.save()","np.dump()","np.tofile()","np.savez()"],a:0},
+  {topic:"File I/O",type:"conceptual",q:"Which function loads a <code>.npy</code> or <code>.npz</code> file?",opts:["np.read()","np.fromfile()","np.import_array()","np.load()"],a:3},
+  {topic:"File I/O",type:"conceptual",q:"Which function saves an array as a human-readable text file?",opts:["np.write()","np.savetxt()","np.totext()","np.save_text()"],a:1},
+  {topic:"File I/O",type:"conceptual",q:"How do you save multiple arrays to a single compressed file?",opts:["np.dump_all()","np.save_multiple()","np.savez_compressed('file.npz', a=a, b=b)","np.save('file', [a,b])"],a:2},
+  {topic:"File I/O",type:"truefalse",q:"True or False: <code>np.loadtxt()</code> can load CSV files by specifying a delimiter.",opts:["Only for integer data","True","Only for 1D data","False"],a:1},
+  {topic:"Boolean Ops",type:"conceptual",q:"Which function returns True if ALL elements in an array are True?",opts:["np.check()","np.all()","np.any()","np.every()"],a:1},
+  {topic:"Boolean Ops",type:"conceptual",q:"Which function returns True if ANY element in an array is True?",opts:["np.any()","np.exists()","np.some()","np.all()"],a:0},
+  {topic:"Boolean Ops",type:"conceptual",q:"What does <code>np.isnan(arr)</code> return?",opts:["Array with NaN replaced by 0","Count of NaN elements","Indices of NaN elements","Boolean array: True where values are NaN"],a:3},
   {topic:"Boolean Ops",type:"snippet",q:"What does this print?\n<pre>import numpy as np\na = np.array([1, 0, 3, 0])\nprint(np.any(a))</pre>",opts:["True","False","[True False True False]","1"],a:0},
-  {topic:"Boolean Ops",type:"snippet",q:"What is the output?\n<pre>import numpy as np\na = np.array([2, 4, 6])\nprint(np.all(a > 0))</pre>",opts:["True","False","[True True True]","Error"],a:0},
-  {topic:"Boolean Ops",type:"snippet",q:"What does this print?\n<pre>import numpy as np\na = np.array([1.0, np.nan, 3.0])\nprint(np.isnan(a))</pre>",opts:["[False  True False]","[True False True]","[nan]","Error"],a:0},
-  {topic:"Boolean Ops",type:"truefalse",q:"True or False: <code>np.array_equal(a, b)</code> returns True only if both arrays have the same shape AND same element values.",opts:["True","False — shape doesn't matter","False — it checks dtype only","True only for float arrays"],a:0},
-
-  {topic:"Array Properties",type:"conceptual",q:"What does <code>arr.ndim</code> return?",opts:["Number of dimensions","Number of elements","Shape as tuple","Total bytes"],a:0},
-  {topic:"Array Properties",type:"conceptual",q:"What does <code>arr.size</code> return?",opts:["Total number of elements","Number of dimensions","Shape length","Memory size in bytes"],a:0},
-  {topic:"Array Properties",type:"conceptual",q:"What does <code>arr.shape</code> return?",opts:["Tuple of dimensions","Number of elements","List of sizes","Array dtype"],a:0},
-  {topic:"Array Properties",type:"snippet",q:"What does this print?\n<pre>import numpy as np\na = np.zeros((2, 3, 4))\nprint(a.ndim, a.size)</pre>",opts:["3 24","2 24","3 9","(2,3,4) 24"],a:0},
-  {topic:"Array Properties",type:"snippet",q:"What is the output?\n<pre>import numpy as np\na = np.array([[1,2,3],[4,5,6]])\nprint(a.shape)</pre>",opts:["(2, 3)","(3, 2)","6","(2, 3, 1)"],a:0},
-  {topic:"Array Properties",type:"truefalse",q:"True or False: For a 2D array of shape (3, 4), <code>arr.size</code> returns 7.",opts:["False — it returns 12 (3×4)","True","True only for integer arrays","False — it returns (3,4)"],a:0},
-
-  {topic:"Utility",type:"conceptual",q:"What does <code>np.where(condition, x, y)</code> do?",opts:["Returns x where condition is True, else y","Returns indices where condition is True","Filters the array","Returns a boolean mask"],a:0},
-  {topic:"Utility",type:"conceptual",q:"What does <code>np.count_nonzero(arr)</code> return?",opts:["Number of non-zero elements","Array of non-zero elements","Indices of non-zero elements","Percentage of non-zero elements"],a:0},
-  {topic:"Utility",type:"conceptual",q:"What does <code>np.isin(a, b)</code> return?",opts:["Boolean array: True where element of a is in b","Common elements of a and b","Count of common elements","Indices of common elements"],a:0},
-  {topic:"Utility",type:"snippet",q:"What is the output?\n<pre>import numpy as np\na = np.array([1, 2, 3, 4, 5])\nb = np.where(a % 2 == 0, a, 0)\nprint(b)</pre>",opts:["[0 2 0 4 0]","[2 4]","[1 0 3 0 5]","Error"],a:0},
-  {topic:"Utility",type:"snippet",q:"What does this print?\n<pre>import numpy as np\na = np.array([0, 1, 0, 3, 0])\nprint(np.count_nonzero(a))</pre>",opts:["2","3","0","5"],a:0},
-  {topic:"Utility",type:"truefalse",q:"True or False: <code>np.linspace(1, 10, 10)</code> produces the same result as <code>np.arange(1, 11, 1)</code> for this specific case.",opts:["True — both produce [1. 2. 3. ... 10.]","False — linspace excludes the endpoint","False — arange produces floats only","True only if dtype is specified"],a:0},
-
-  {topic:"Advanced Beginner",type:"conceptual",q:"What is a NumPy axis?",opts:["A dimension of the array (axis 0 = rows, axis 1 = cols for 2D)","A rotation of the array","An index label","A plot axis"],a:0},
-  {topic:"Advanced Beginner",type:"conceptual",q:"What does <code>np.sum(arr, axis=0)</code> compute for a 2D array?",opts:["Sum along each column (row-wise collapse)","Sum along each row (column-wise collapse)","Total sum of all elements","Element-wise sum"],a:0},
-  {topic:"Advanced Beginner",type:"conceptual",q:"What does <code>np.sum(arr, axis=1)</code> compute for a 2D array?",opts:["Sum along each row (column-wise collapse)","Sum along each column","Total sum","Element-wise sum"],a:0},
-  {topic:"Advanced Beginner",type:"snippet",q:"What is the output?\n<pre>import numpy as np\na = np.array([[1,2,3],[4,5,6]])\nprint(np.sum(a, axis=0))</pre>",opts:["[5 7 9]","[6 15]","21","[1 2 3 4 5 6]"],a:0},
-  {topic:"Advanced Beginner",type:"snippet",q:"What does this print?\n<pre>import numpy as np\na = np.array([[1,2],[3,4]])\nprint(np.max(a, axis=1))</pre>",opts:["[2 4]","[3 4]","[1 2]","[4]"],a:0},
-  {topic:"Advanced Beginner",type:"snippet",q:"What is the output?\n<pre>import numpy as np\na = np.array([1, 2, 3, 4])\nprint(a * 2)</pre>",opts:["[2 4 6 8]","[1 2 3 4 1 2 3 4]","8","Error"],a:0},
-  {topic:"Advanced Beginner",type:"snippet",q:"What does this print?\n<pre>import numpy as np\na = np.array([3, 1, 4, 1, 5, 9])\nprint(np.min(a), np.max(a))</pre>",opts:["1 9","3 9","1 5","0 9"],a:0},
-  {topic:"Advanced Beginner",type:"truefalse",q:"True or False: <code>np.sum(arr)</code> without an axis argument returns the total sum of all elements.",opts:["True","False — it sums along axis 0","False — it sums along axis 1","True only for 1D arrays"],a:0},
-  {topic:"Advanced Beginner",type:"truefalse",q:"True or False: NumPy arrays are faster than Python lists for large numerical computations because they are stored in contiguous memory and use optimized C code.",opts:["True","False — lists are always faster","False — they have identical speed","True only for integer arrays"],a:0},
+  {topic:"Boolean Ops",type:"snippet",q:"What is the output?\n<pre>import numpy as np\na = np.array([2, 4, 6])\nprint(np.all(a > 0))</pre>",opts:["Error","[True True True]","True","False"],a:2},
+  {topic:"Boolean Ops",type:"snippet",q:"What does this print?\n<pre>import numpy as np\na = np.array([1.0, np.nan, 3.0])\nprint(np.isnan(a))</pre>",opts:["[nan]","Error","[False  True False]","[True False True]"],a:2},
+  {topic:"Boolean Ops",type:"truefalse",q:"True or False: <code>np.array_equal(a, b)</code> returns True only if both arrays have the same shape AND same element values.",opts:["True","False â€” shape doesn't matter","True only for float arrays","False â€” it checks dtype only"],a:0},
+  {topic:"Array Properties",type:"conceptual",q:"What does <code>arr.ndim</code> return?",opts:["Number of elements","Total bytes","Shape as tuple","Number of dimensions"],a:3},
+  {topic:"Array Properties",type:"conceptual",q:"What does <code>arr.size</code> return?",opts:["Memory size in bytes","Shape length","Number of dimensions","Total number of elements"],a:3},
+  {topic:"Array Properties",type:"conceptual",q:"What does <code>arr.shape</code> return?",opts:["Tuple of dimensions","Number of elements","Array dtype","List of sizes"],a:0},
+  {topic:"Array Properties",type:"snippet",q:"What does this print?\n<pre>import numpy as np\na = np.zeros((2, 3, 4))\nprint(a.ndim, a.size)</pre>",opts:["2 24","3 24","(2,3,4) 24","3 9"],a:1},
+  {topic:"Array Properties",type:"snippet",q:"What is the output?\n<pre>import numpy as np\na = np.array([[1,2,3],[4,5,6]])\nprint(a.shape)</pre>",opts:["(3, 2)","(2, 3, 1)","6","(2, 3)"],a:3},
+  {topic:"Array Properties",type:"truefalse",q:"True or False: For a 2D array of shape (3, 4), <code>arr.size</code> returns 7.",opts:["True only for integer arrays","True","False â€” it returns 12 (3Ã—4)","False â€” it returns (3,4)"],a:2},
+  {topic:"Utility",type:"conceptual",q:"What does <code>np.where(condition, x, y)</code> do?",opts:["Returns x where condition is True, else y","Returns indices where condition is True","Returns a boolean mask","Filters the array"],a:0},
+  {topic:"Utility",type:"conceptual",q:"What does <code>np.count_nonzero(arr)</code> return?",opts:["Number of non-zero elements","Percentage of non-zero elements","Array of non-zero elements","Indices of non-zero elements"],a:0},
+  {topic:"Utility",type:"conceptual",q:"What does <code>np.isin(a, b)</code> return?",opts:["Boolean array: True where element of a is in b","Indices of common elements","Count of common elements","Common elements of a and b"],a:0},
+  {topic:"Utility",type:"snippet",q:"What is the output?\n<pre>import numpy as np\na = np.array([1, 2, 3, 4, 5])\nb = np.where(a % 2 == 0, a, 0)\nprint(b)</pre>",opts:["[1 0 3 0 5]","Error","[2 4]","[0 2 0 4 0]"],a:3},
+  {topic:"Utility",type:"snippet",q:"What does this print?\n<pre>import numpy as np\na = np.array([0, 1, 0, 3, 0])\nprint(np.count_nonzero(a))</pre>",opts:["0","2","3","5"],a:1},
+  {topic:"Utility",type:"truefalse",q:"True or False: <code>np.linspace(1, 10, 10)</code> produces the same result as <code>np.arange(1, 11, 1)</code> for this specific case.",opts:["True only if dtype is specified","True â€” both produce [1. 2. 3. ... 10.]","False â€” arange produces floats only","False â€” linspace excludes the endpoint"],a:1},
+  {topic:"Advanced Beginner",type:"conceptual",q:"What is a NumPy axis?",opts:["A rotation of the array","An index label","A dimension of the array (axis 0 = rows, axis 1 = cols for 2D)","A plot axis"],a:2},
+  {topic:"Advanced Beginner",type:"conceptual",q:"What does <code>np.sum(arr, axis=0)</code> compute for a 2D array?",opts:["Sum along each column (row-wise collapse)","Sum along each row (column-wise collapse)","Element-wise sum","Total sum of all elements"],a:0},
+  {topic:"Advanced Beginner",type:"conceptual",q:"What does <code>np.sum(arr, axis=1)</code> compute for a 2D array?",opts:["Sum along each row (column-wise collapse)","Element-wise sum","Total sum","Sum along each column"],a:0},
+  {topic:"Advanced Beginner",type:"snippet",q:"What is the output?\n<pre>import numpy as np\na = np.array([[1,2,3],[4,5,6]])\nprint(np.sum(a, axis=0))</pre>",opts:["21","[1 2 3 4 5 6]","[5 7 9]","[6 15]"],a:2},
+  {topic:"Advanced Beginner",type:"snippet",q:"What does this print?\n<pre>import numpy as np\na = np.array([[1,2],[3,4]])\nprint(np.max(a, axis=1))</pre>",opts:["[2 4]","[3 4]","[4]","[1 2]"],a:0},
+  {topic:"Advanced Beginner",type:"snippet",q:"What is the output?\n<pre>import numpy as np\na = np.array([1, 2, 3, 4])\nprint(a * 2)</pre>",opts:["Error","[1 2 3 4 1 2 3 4]","[2 4 6 8]","8"],a:2},
+  {topic:"Advanced Beginner",type:"snippet",q:"What does this print?\n<pre>import numpy as np\na = np.array([3, 1, 4, 1, 5, 9])\nprint(np.min(a), np.max(a))</pre>",opts:["0 9","3 9","1 5","1 9"],a:3},
+  {topic:"Advanced Beginner",type:"truefalse",q:"True or False: <code>np.sum(arr)</code> without an axis argument returns the total sum of all elements.",opts:["True","False â€” it sums along axis 0","False â€” it sums along axis 1","True only for 1D arrays"],a:0},
+  {topic:"Advanced Beginner",type:"truefalse",q:"True or False: NumPy arrays are faster than Python lists for large numerical computations because they are stored in contiguous memory and use optimized C code.",opts:["False â€” lists are always faster","True","True only for integer arrays","False â€” they have identical speed"],a:1}
 ];
 
 const TOTAL_Q   = 50;
-const TIME_SECS = 60 * 60;  
+const TIME_SECS = 60 * 60;
 
 let quizQuestions = [];
 let userAnswers   = [];
@@ -789,11 +750,23 @@ function shuffle(arr) {
   return a;
 }
 
+// ── Randomise option order while keeping correct-answer tracking intact ──
+function shuffleOptions(q) {
+  const pairs = q.opts.map((text, i) => ({ text, correct: i === q.a }));
+  for (let i = pairs.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [pairs[i], pairs[j]] = [pairs[j], pairs[i]];
+  }
+  const newOpts = pairs.map(p => p.text);
+  const newA    = pairs.findIndex(p => p.correct);
+  return { topic: q.topic, type: q.type, q: q.q, opts: newOpts, a: newA };
+}
+// ─────────────────────────────────────────────────────────────────────────
+
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
-
 
 function startTimer() {
   clearInterval(timerInterval);
@@ -802,17 +775,14 @@ function startTimer() {
   timerInterval = setInterval(function() {
     timeLeft--;
     updateTimerDisplay();
-    if (timeLeft <= 0) {
-      clearInterval(timerInterval);
-      submitQuiz();
-    }
+    if (timeLeft <= 0) { clearInterval(timerInterval); submitQuiz(); }
   }, 1000);
 }
 
 function updateTimerDisplay() {
-  var m = Math.floor(timeLeft / 60).toString().padStart(2,'0');
-  var s = (timeLeft % 60).toString().padStart(2,'0');
-  var el = document.getElementById('timerDisplay');
+  const m  = Math.floor(timeLeft / 60).toString().padStart(2,'0');
+  const s  = (timeLeft % 60).toString().padStart(2,'0');
+  const el = document.getElementById('timerDisplay');
   if (el) {
     el.textContent = m + ':' + s;
     el.parentElement.style.color = timeLeft < 300 ? 'var(--danger)' : 'var(--warn)';
@@ -820,7 +790,9 @@ function updateTimerDisplay() {
 }
 
 function startQuiz() {
-  quizQuestions = shuffle(QUESTION_BANK).slice(0, TOTAL_Q);
+  const selected = shuffle(QUESTION_BANK).slice(0, TOTAL_Q);
+  // Shuffle options of every selected question so correct answer isn't always A
+  quizQuestions = selected.map(shuffleOptions);
   userAnswers   = new Array(TOTAL_Q).fill(null);
   currentQ      = 0;
   buildNavDots();
@@ -830,22 +802,19 @@ function startQuiz() {
 }
 
 function buildNavDots() {
-  var container = document.getElementById('navDots');
+  const container = document.getElementById('navDots');
   container.innerHTML = '';
-  for (var i = 0; i < TOTAL_Q; i++) {
-    (function(idx) {
-      var d = document.createElement('button');
-      d.className = 'nav-dot' + (idx === 0 ? ' current' : '');
-      d.textContent = idx + 1;
-      d.onclick = function() { goToQuestion(idx); };
-      container.appendChild(d);
-    })(i);
+  for (let i = 0; i < TOTAL_Q; i++) {
+    const d = document.createElement('button');
+    d.className = 'nav-dot' + (i === 0 ? ' current' : '');
+    d.textContent = i + 1;
+    d.onclick = () => goToQuestion(i);
+    container.appendChild(d);
   }
 }
 
 function updateNavDots() {
-  var dots = document.querySelectorAll('.nav-dot');
-  dots.forEach(function(d, i) {
+  document.querySelectorAll('.nav-dot').forEach((d, i) => {
     d.className = 'nav-dot';
     if (i === currentQ) d.classList.add('current');
     else if (userAnswers[i] !== null) d.classList.add('answered');
@@ -853,33 +822,31 @@ function updateNavDots() {
 }
 
 function renderQuestion() {
-  var q = quizQuestions[currentQ];
-  var container = document.getElementById('questionContainer');
-  var letters = ['A','B','C','D'];
+  const q         = quizQuestions[currentQ];
+  const container = document.getElementById('questionContainer');
+  const letters   = ['A','B','C','D'];
+  const typeIcon  = q.type === 'snippet' ? '💻 Snippet' : q.type === 'truefalse' ? '✅ True / False' : '💡 Conceptual';
 
-  var typeIcon = q.type === 'snippet' ? '💻 Snippet' : q.type === 'truefalse' ? '✅ True / False' : '💡 Conceptual';
-
-  var optionsHTML = q.opts.map(function(opt, i) {
-    var sel = userAnswers[currentQ] === i ? ' selected' : '';
-    return '<button class="option-btn' + sel + '" onclick="selectAnswer(' + i + ')">' +
-      '<span class="option-label">' + letters[i] + '</span>' +
-      '<span>' + opt + '</span>' +
-      '</button>';
+  const optionsHTML = q.opts.map((opt, i) => {
+    const sel = userAnswers[currentQ] === i ? ' selected' : '';
+    return `<button class="option-btn${sel}" onclick="selectAnswer(${i})">
+      <span class="option-label">${letters[i]}</span>
+      <span>${opt}</span>
+    </button>`;
   }).join('');
 
-  container.innerHTML =
-    '<div class="question-card">' +
-      '<span class="q-tag">📌 ' + q.topic + '</span>' +
-      '<span class="q-type-tag">' + typeIcon + '</span>' +
-      '<div class="q-number">Question ' + (currentQ + 1) + ' of ' + TOTAL_Q + '</div>' +
-      '<div class="q-text">' + q.q + '</div>' +
-      '<div class="options-grid">' + optionsHTML + '</div>' +
-    '</div>';
+  container.innerHTML = `
+    <div class="question-card">
+      <span class="q-tag">📌 ${q.topic}</span>
+      <span class="q-type-tag">${typeIcon}</span>
+      <div class="q-number">Question ${currentQ + 1} of ${TOTAL_Q}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="options-grid">${optionsHTML}</div>
+    </div>`;
 
   document.getElementById('currentQNum').textContent = currentQ + 1;
-  document.getElementById('totalQNum').textContent = TOTAL_Q;
-  var pct = ((currentQ + 1) / TOTAL_Q * 100);
-  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('totalQNum').textContent   = TOTAL_Q;
+  document.getElementById('progressBar').style.width = ((currentQ + 1) / TOTAL_Q * 100) + '%';
   document.getElementById('btnPrev').disabled = (currentQ === 0);
   document.getElementById('btnNext').disabled = (currentQ === TOTAL_Q - 1);
   updateNavDots();
@@ -891,22 +858,22 @@ function selectAnswer(idx) {
 }
 
 function navigate(dir) {
-  var next = currentQ + dir;
+  const next = currentQ + dir;
   if (next >= 0 && next < TOTAL_Q) goToQuestion(next);
 }
 
 function goToQuestion(idx) {
   currentQ = idx;
   renderQuestion();
-  var qc = document.getElementById('questionContainer');
+  const qc = document.getElementById('questionContainer');
   if (qc) qc.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function openSubmitModal() {
-  var unanswered = userAnswers.filter(function(a) { return a === null; }).length;
+  const unanswered = userAnswers.filter(a => a === null).length;
   document.getElementById('modalText').textContent = unanswered > 0
-    ? 'You have ' + unanswered + ' unanswered question' + (unanswered > 1 ? 's' : '') + '. Submit anyway?'
-    : 'You have answered all ' + TOTAL_Q + ' questions. Ready to submit?';
+    ? `You have ${unanswered} unanswered question${unanswered > 1 ? 's' : ''}. Submit anyway?`
+    : `You have answered all ${TOTAL_Q} questions. Ready to submit?`;
   document.getElementById('submitModal').classList.add('open');
 }
 
@@ -918,12 +885,12 @@ function submitQuiz() {
   clearInterval(timerInterval);
   closeSubmitModal();
 
-  var correct = 0, wrong = 0, skipped = 0;
-  var breakdown = [];
+  let correct = 0, wrong = 0, skipped = 0;
+  const breakdown = [];
 
-  for (var i = 0; i < TOTAL_Q; i++) {
-    var q = quizQuestions[i];
-    var ans = userAnswers[i];
+  for (let i = 0; i < TOTAL_Q; i++) {
+    const q   = quizQuestions[i];
+    const ans = userAnswers[i];
     if (ans === null) {
       skipped++;
       breakdown.push({ status:'skip', q:q.q, correct:q.opts[q.a], your:null });
@@ -936,13 +903,10 @@ function submitQuiz() {
     }
   }
 
-  var pct = Math.round((correct / TOTAL_Q) * 100);
-  showResults(correct, wrong, skipped, pct, breakdown);
+  showResults(correct, wrong, skipped, Math.round((correct / TOTAL_Q) * 100), breakdown);
 }
 
-function stripTags(html) {
-  return html.replace(/<[^>]+>/g, '');
-}
+function stripTags(html) { return html.replace(/<[^>]+>/g, ''); }
 
 function showResults(correct, wrong, skipped, pct, breakdown) {
   document.getElementById('resCorrect').textContent = correct;
@@ -950,56 +914,51 @@ function showResults(correct, wrong, skipped, pct, breakdown) {
   document.getElementById('resSkipped').textContent = skipped;
   document.getElementById('scorePct').textContent   = pct + '%';
 
-  var grade, msg, color;
-  if      (pct >= 90) { grade='🏆 Outstanding!';   msg='You have mastered NumPy!';                   color='#00d4ff'; }
-  else if (pct >= 80) { grade='🥇 Excellent!';     msg='Great command of NumPy concepts.';            color='#10b981'; }
-  else if (pct >= 70) { grade='🥈 Good Job!';      msg='Solid understanding — keep practicing!';     color='#a3e635'; }
-  else if (pct >= 60) { grade='🥉 Satisfactory';   msg='Review the topics you missed.';              color='#f59e0b'; }
-  else if (pct >= 50) { grade='📚 Needs Work';     msg='Focus on core NumPy fundamentals.';          color='#f97316'; }
-  else                { grade='🔁 Keep Studying';  msg='Review the NumPy docs and retry!';           color='#ef4444'; }
+  let grade, msg, color;
+  if      (pct >= 90) { grade='🏆 Outstanding!';  msg='You have mastered NumPy!';                  color='#00d4ff'; }
+  else if (pct >= 80) { grade='🥇 Excellent!';    msg='Great command of NumPy concepts.';           color='#10b981'; }
+  else if (pct >= 70) { grade='🥈 Good Job!';     msg='Solid understanding — keep practicing!';    color='#a3e635'; }
+  else if (pct >= 60) { grade='🥉 Satisfactory';  msg='Review the topics you missed.';             color='#f59e0b'; }
+  else if (pct >= 50) { grade='📚 Needs Work';    msg='Focus on core NumPy fundamentals.';         color='#f97316'; }
+  else                { grade='🔁 Keep Studying'; msg='Review the NumPy docs and retry!';          color='#ef4444'; }
 
-  document.getElementById('resultGrade').textContent  = grade;
-  document.getElementById('resultGrade').style.color  = color;
-  document.getElementById('resultMsg').textContent    = msg;
-  document.getElementById('scorePct').style.color     = color;
+  document.getElementById('resultGrade').textContent = grade;
+  document.getElementById('resultGrade').style.color = color;
+  document.getElementById('resultMsg').textContent   = msg;
+  document.getElementById('scorePct').style.color    = color;
 
-  var ring = document.getElementById('ringFill');
-  var circumference = 471;
+  const ring = document.getElementById('ringFill');
   ring.style.stroke = color;
-  setTimeout(function() {
-    ring.style.strokeDashoffset = circumference - (circumference * pct / 100);
-  }, 200);
+  setTimeout(() => { ring.style.strokeDashoffset = 471 - (471 * pct / 100); }, 200);
 
-  var list = document.getElementById('breakdownList');
-  var html = '';
-  for (var i = 0; i < breakdown.length; i++) {
-    var item = breakdown[i];
-    var qText = stripTags(item.q);
+  let html = '';
+  breakdown.forEach((item, i) => {
+    const qText = stripTags(item.q);
     if (item.status === 'correct') {
-      html += '<div class="breakdown-item correct-item">' +
-        '<span class="breakdown-icon">✅</span>' +
-        '<div>' +
-          '<div class="breakdown-q"><strong>Q' + (i+1) + ':</strong> ' + qText + '</div>' +
-          '<div class="breakdown-ans">Your answer: ' + item.your + '</div>' +
-        '</div></div>';
+      html += `<div class="breakdown-item correct-item">
+        <span class="breakdown-icon">✅</span>
+        <div>
+          <div class="breakdown-q"><strong>Q${i+1}:</strong> ${qText}</div>
+          <div class="breakdown-ans">Your answer: ${item.your}</div>
+        </div></div>`;
     } else if (item.status === 'wrong') {
-      html += '<div class="breakdown-item wrong-item">' +
-        '<span class="breakdown-icon">❌</span>' +
-        '<div>' +
-          '<div class="breakdown-q"><strong>Q' + (i+1) + ':</strong> ' + qText + '</div>' +
-          '<div class="breakdown-ans your">Your answer: ' + item.your + '</div>' +
-          '<div class="breakdown-ans" style="color:var(--accent3)">Correct: ' + item.correct + '</div>' +
-        '</div></div>';
+      html += `<div class="breakdown-item wrong-item">
+        <span class="breakdown-icon">❌</span>
+        <div>
+          <div class="breakdown-q"><strong>Q${i+1}:</strong> ${qText}</div>
+          <div class="breakdown-ans your">Your answer: ${item.your}</div>
+          <div class="breakdown-ans" style="color:var(--accent3)">Correct: ${item.correct}</div>
+        </div></div>`;
     } else {
-      html += '<div class="breakdown-item skip-item">' +
-        '<span class="breakdown-icon">⏭</span>' +
-        '<div>' +
-          '<div class="breakdown-q"><strong>Q' + (i+1) + ':</strong> ' + qText + '</div>' +
-          '<div class="breakdown-ans">Skipped — Correct was: ' + item.correct + '</div>' +
-        '</div></div>';
+      html += `<div class="breakdown-item skip-item">
+        <span class="breakdown-icon">⏭</span>
+        <div>
+          <div class="breakdown-q"><strong>Q${i+1}:</strong> ${qText}</div>
+          <div class="breakdown-ans">Skipped — Correct was: ${item.correct}</div>
+        </div></div>`;
     }
-  }
-  list.innerHTML = html;
+  });
+  document.getElementById('breakdownList').innerHTML = html;
 
   showScreen('result');
   window.scrollTo({ top: 0, behavior: 'smooth' });
