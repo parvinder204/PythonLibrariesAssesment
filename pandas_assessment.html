@@ -600,6 +600,28 @@ function shuffle(arr) {
   return a;
 }
 
+// ── NEW: randomise option order while keeping correct-answer tracking intact ──
+function shuffleOptions(q) {
+  // Pair each option text with a flag marking whether it is correct
+  var pairs = [];
+  for (var i = 0; i < q.opts.length; i++) {
+    pairs.push({ text: q.opts[i], correct: (i === q.a) });
+  }
+  // Fisher-Yates shuffle on the pairs array
+  for (var i = pairs.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = pairs[i]; pairs[i] = pairs[j]; pairs[j] = tmp;
+  }
+  // Rebuild opts array and locate the new index of the correct answer
+  var newOpts = [], newA = 0;
+  for (var i = 0; i < pairs.length; i++) {
+    newOpts.push(pairs[i].text);
+    if (pairs[i].correct) newA = i;
+  }
+  return { topic: q.topic, type: q.type, q: q.q, opts: newOpts, a: newA };
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
 function showScreen(id) {
   var screens = document.querySelectorAll('.screen');
   for (var i = 0; i < screens.length; i++) screens[i].classList.remove('active');
@@ -635,7 +657,9 @@ function updateTimerDisplay() {
 }
 
 function startQuiz() {
-  quizQuestions = shuffle(QUESTION_BANK).slice(0, TOTAL_Q);
+  var selected = shuffle(QUESTION_BANK).slice(0, TOTAL_Q);
+  // Apply option-order shuffle to every selected question
+  quizQuestions = selected.map(function(q) { return shuffleOptions(q); });
   userAnswers   = [];
   for (var i = 0; i < TOTAL_Q; i++) userAnswers.push(null);
   currentQ = 0;
